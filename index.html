@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="bn" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বাঁশখালী গ্রাম - ডিজিটাল তথ্য ও সেবা কেন্দ্র</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Bengali -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        accent: {
+                            500: '#eab308',
+                            600: '#ca8a04',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Hind Siliguri', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Hind Siliguri', sans-serif; }
+        .hero-bg {
+            background: linear-gradient(rgba(20, 83, 45, 0.85), rgba(22, 101, 52, 0.75)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1600') center/cover no-repeat;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+    <!-- Top Bar -->
+    <div class="bg-brand-900 text-slate-200 text-sm py-1.5 px-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-2">
+            <div class="flex items-center space-x-4 space-x-reverse">
+                <span id="weather-info" class="flex items-center gap-1.5">
+                    <i class="fa-solid fa-spinner animate-spin text-amber-400" aria-hidden="true"></i>
+                    <span>আজকের আবহাওয়া লোড হচ্ছে...</span>
+                </span>
+                <span class="hidden md:inline"><i class="fa-solid fa-bullhorn text-amber-400 mr-1" aria-hidden="true"></i> হেল্পলাইন: ১৬১২৩</span>
+            </div>
+            <!-- Auth Navigation Area -->
+            <div class="flex items-center space-x-3 text-xs" id="auth-bar-container"></div>
+        </div>
+    </div>
+
+    <!-- Navigation Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <div class="flex items-center">
+                    <a href="#" class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full bg-brand-700 text-white flex items-center justify-center text-2xl font-bold shadow-inner">
+                            <i class="fa-solid fa-leaf" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <span class="text-2xl font-bold text-brand-900 block leading-none">বাঁশখালী</span>
+                            <span class="text-xs text-brand-700 font-semibold tracking-wide">স্মার্ট ভিলেজ ডিজিটাল পোর্টাল</span>
+                        </div>
+                    </a>
+                </div>
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-1 space-x-reverse font-medium">
+                    <a href="#hero" class="px-3 py-2 rounded-md text-brand-900 hover:text-brand-700 hover:bg-brand-50 transition">প্রচ্ছদ</a>
+                    <a href="#notices" class="px-3 py-2 rounded-md text-slate-700 hover:text-brand-700 hover:bg-brand-50 transition">নোটিশ বোর্ড</a>
+                    <a href="#services" class="px-3 py-2 rounded-md text-slate-700 hover:text-brand-700 hover:bg-brand-50 transition">জরুরি সেবা</a>
+                    <a href="#market" class="px-3 py-2 rounded-md text-slate-700 hover:text-brand-700 hover:bg-brand-50 transition">কৃষি বাজার</a>
+                    <a href="#gallery" class="px-3 py-2 rounded-md text-slate-700 hover:text-brand-700 hover:bg-brand-50 transition">ঐতিহ্য</a>
+                    <!-- Exclusive Admin Dashboard Navigation Button -->
+                    <span id="admin-nav-item"></span>
+                    <a href="#contact" class="px-4 py-2 rounded-full bg-brand-700 text-white hover:bg-brand-800 transition shadow-sm ml-2">যোগাযোগ ও অনুদান</a>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" aria-label="মোবাইল মেনু চালু করুন" aria-expanded="false" class="p-2 rounded-md text-slate-700 hover:text-brand-700 hover:bg-slate-100 focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-2">
+            <a href="#hero" class="mobile-link block px-3 py-2 rounded-md text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium">প্রচ্ছদ</a>
+            <a href="#notices" class="mobile-link block px-3 py-2 rounded-md text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium">নোটিশ বোর্ড</a>
+            <a href="#services" class="mobile-link block px-3 py-2 rounded-md text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium">জরুরি সেবা</a>
+            <a href="#market" class="mobile-link block px-3 py-2 rounded-md text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium">কৃষি বাজার</a>
+            <a href="#gallery" class="mobile-link block px-3 py-2 rounded-md text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium">ঐতিহ্য</a>
+            <div id="mobile-admin-nav-item"></div>
+            <a href="#contact" class="mobile-link block px-3 py-2 rounded-md bg-brand-700 text-white text-center font-medium mt-2">যোগাযোগ ও অনুদান</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-bg text-white py-20 lg:py-28 px-4 relative">
+        <div class="max-w-5xl mx-auto text-center space-y-6">
+            <span class="inline-block bg-emerald-600/60 backdrop-blur-md text-emerald-100 border border-emerald-400/30 px-4 py-1.5 rounded-full text-sm font-medium">
+                🌱 ডিজিটাল বাংলাদেশ ও স্মার্ট গ্রামের অংশীদার
+            </span>
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+                স্বাগতম আমাদের <span class="text-amber-300">বাঁশখালী</span> গ্রামে
+            </h1>
+            <p class="text-lg sm:text-xl text-slate-200 max-w-3xl mx-auto leading-relaxed">
+                ঐতিহ্য, সম্ভাবনা ও প্রাকৃতিক সৌন্দর্যে ঘেরা আমাদের গ্রাম। গ্রামের সকল জরুরি তথ্য, সরকারি সেবা, কৃষি বাজার ও নোটিশ এখন এক ক্লিকেই আপনার হাতে।
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 pt-4">
+                <a href="#services" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold px-6 py-3 rounded-xl shadow-lg transition flex items-center gap-2">
+                    <i class="fa-solid fa-phone-volume" aria-hidden="true"></i> জরুরি নম্বরসমূহ
+                </a>
+                <a href="#notices" class="bg-white/10 hover:bg-white/20 text-white border border-white/30 backdrop-blur-md font-semibold px-6 py-3 rounded-xl shadow-lg transition flex items-center gap-2">
+                    <i class="fa-solid fa-newspaper" aria-hidden="true"></i> সর্বশেষ নোটিশ
+                </a>
+            </div>
+            <!-- Quick Stats Banner -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mt-12 pt-8 border-t border-white/20 text-center">
+                <div class="p-3 bg-black/20 rounded-lg backdrop-blur-sm">
+                    <div class="text-2xl sm:text-3xl font-bold text-amber-300">৩,৫০০+</div>
+                    <div class="text-xs sm:text-sm text-slate-300">মোট জনসংখ্যা</div>
+                </div>
+                <div class="p-3 bg-black/20 rounded-lg backdrop-blur-sm">
+                    <div class="text-2xl sm:text-3xl font-bold text-amber-300">৭০%</div>
+                    <div class="text-xs sm:text-sm text-slate-300">শিক্ষার হার</div>
+                </div>
+                <div class="p-3 bg-black/20 rounded-lg backdrop-blur-sm">
+                    <div class="text-2xl sm:text-3xl font-bold text-amber-300">৩৭০ একর</div>
+                    <div class="text-xs sm:text-sm text-slate-300">কৃষি জমি</div>
+                </div>
+                <div class="p-3 bg-black/20 rounded-lg backdrop-blur-sm">
+                    <div class="text-2xl sm:text-3xl font-bold text-amber-300">১০০%</div>
+                    <div class="text-xs sm:text-sm text-slate-300">বিদ্যুতায়ন</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notice Board Section -->
+    <section id="notices" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-brand-900 flex items-center gap-3">
+                        <i class="fa-solid fa-clipboard-list text-brand-700" aria-hidden="true"></i> ডিজিটাল নোটিশ বোর্ড
+                    </h2>
+                    <p class="text-slate-600 mt-2">গ্রামের সকল আপডেট, সরকারি সুবিধা ও স্বাস্থ্য সচেতনতামূলক খবর</p>
+                </div>
+                <div class="flex flex-wrap gap-2 items-center">
+                    <div class="relative w-full sm:w-auto">
+                        <input type="text" id="notice-search" placeholder="নোটিশ খুঁজুন..." class="w-full sm:w-64 pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400 text-sm" aria-hidden="true"></i>
+                    </div>
+                    <!-- Add Notice Button (Visible to Authorized Users) -->
+                    <div id="add-notice-btn-container"></div>
+                </div>
+            </div>
+            <!-- Categories Tabs -->
+            <div class="flex border-b border-slate-200 mb-6 overflow-x-auto gap-2 pb-2" id="notice-tabs">
+                <button data-category="all" class="notice-tab active-tab bg-brand-700 text-white px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition">সব নোটিশ</button>
+                <button data-category="agriculture" class="notice-tab bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition">কৃষি ও চাষাবাদ</button>
+                <button data-category="health" class="notice-tab bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition">স্বাস্থ্য ও টিকা</button>
+                <button data-category="education" class="notice-tab bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition">শিক্ষা ও স্কলারশিপ</button>
+                <button data-category="general" class="notice-tab bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition">সাধারণ নোটিশ</button>
+            </div>
+            <!-- Notice Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="notice-container"></div>
+        </div>
+    </section>
+
+    <!-- Emergency Services Directory -->
+    <section id="services" class="py-16 bg-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl font-bold text-brand-900">জরুরি সেবা ও যোগাযোগ ডিরেক্টরি</h2>
+                <p class="text-slate-600 mt-2">যেকোনো প্রয়োজন বা দুর্ঘটনায় সরাসরি যোগাযোগ করুন গ্রাম ও নিকটস্থ দপ্তরের সাথে</p>
+            </div>
+            <div class="flex flex-col sm:flex-row justify-between items-center max-w-2xl mx-auto mb-8 gap-4">
+                <div class="relative w-full">
+                    <input type="text" id="contact-search" placeholder="ডাক্তার, পুলিশ বা সার্ভিস দিয়ে খুঁজুন..." class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-4 text-slate-400" aria-hidden="true"></i>
+                </div>
+                <!-- Add Contact Button -->
+                <div id="add-contact-btn-container" class="shrink-0"></div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="contacts-container"></div>
+        </div>
+    </section>
+
+    <!-- Farmers Market & Crop Prices Section -->
+    <section id="market" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 text-xs font-semibold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full mb-2">
+                        <i class="fa-solid fa-arrows-rotate animate-spin text-emerald-600" aria-hidden="true"></i> দৈনিক আপডেটকৃত
+                    </div>
+                    <h2 class="text-3xl font-bold text-brand-900">কৃষি বাজার ও পণ্যের দরদাম</h2>
+                    <p class="text-slate-600 mt-1">আমাদের স্থানীয় হাটের আজকের পাইকারি ও খুচরা মূল্য তালিকা</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="text-sm text-slate-500 italic">সর্বশেষ আপডেট: আজ সকাল ০৮:৩০ মিনিট</div>
+                    <div id="add-market-btn-container"></div>
+                </div>
+            </div>
+            <div class="overflow-x-auto bg-white rounded-xl shadow border border-slate-200">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-brand-900 text-white text-sm sm:text-base">
+                            <th class="p-4 font-semibold">পণ্যের নাম</th>
+                            <th class="p-4 font-semibold">একক</th>
+                            <th class="p-4 font-semibold">আজকের পাইকারি দর</th>
+                            <th class="p-4 font-semibold">খুচরা দর</th>
+                            <th class="p-4 font-semibold">পরিবর্তন</th>
+                            <th class="p-4 font-semibold text-right admin-action-col hidden">অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200 text-sm sm:text-base" id="market-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery & History Section -->
+    <section id="gallery" class="py-16 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl font-bold text-brand-900">গ্রামের ইতিহাস ও ঐতিহ্য</h2>
+                <p class="text-slate-600 mt-2">আমাদের সবুজ প্রান্তর, ঐতিহাসিক স্থান ও লোকজ সংস্কৃতির এক ঝলক</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition">
+                    <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=600" alt="পুরাতন জমিদার বাড়ি" class="w-full h-52 object-cover" loading="lazy">
+                    <div class="p-5">
+                        <span class="text-xs bg-amber-100 text-amber-800 font-medium px-2.5 py-0.5 rounded">ঐতিহাসিক স্থান</span>
+                        <h3 class="text-xl font-bold text-slate-800 mt-2">প্রাচীন জমিদার বাড়ি</h3>
+                        <p class="text-slate-600 text-sm mt-2">প্রায় ২০০ বছরের পুরোনো এই রাজবাড়িটি গ্রামের ইতিহাসের অন্যতম একটি অংশ।</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition">
+                    <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=600" alt="সবুজ ধানক্ষেত" class="w-full h-52 object-cover" loading="lazy">
+                    <div class="p-5">
+                        <span class="text-xs bg-emerald-100 text-emerald-800 font-medium px-2.5 py-0.5 rounded">প্রকৃতি</span>
+                        <h3 class="text-xl font-bold text-slate-800 mt-2">বিশাল সোনার মাঠ</h3>
+                        <p class="text-slate-600 text-sm mt-2">গ্রামের তিন পাশ ঘেরা বিস্তীর্ণ সবুজ ধানক্ষেত, যা ঋতু পরিবর্তনের সাথে সাথে সোনালী রূপ নেয়।</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition">
+                    <img src="https://images.unsplash.com/photo-1609137144813-7d9921338f24?auto=format&fit=crop&q=80&w=600" alt="নৌকা বাইচ" class="w-full h-52 object-cover" loading="lazy">
+                    <div class="p-5">
+                        <span class="text-xs bg-blue-100 text-blue-800 font-medium px-2.5 py-0.5 rounded">সংস্কৃতি</span>
+                        <h3 class="text-xl font-bold text-slate-800 mt-2">বার্ষিক নৌকা বাইচ উৎসব</h3>
+                        <p class="text-slate-600 text-sm mt-2">প্রতি বছর ভাদ্র মাসে স্থানীয় নদীতে অনুষ্ঠিত হয় ঐতিহ্যবাহী লোকজ নৌকা বাইচ।</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section id="contact" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="space-y-6">
+                    <div>
+                        <span class="text-sm font-semibold text-brand-700 tracking-wider uppercase">উন্নয়ে অংশ নিন</span>
+                        <h2 class="text-3xl font-bold text-brand-900 mt-1">যোগাযোগ, মতামত ও গ্রাম উন্নয়ন তহবিল</h2>
+                    </div>
+                    <p class="text-slate-600 leading-relaxed">
+                        আপনি কি গ্রামের স্থায়ী বাসিন্দা নাকি প্রবাসী? গ্রামের ক্লাব, লাইব্রেরি বা রাস্তাঘাটের উন্নয়নে আপনার যেকোনো পরামর্শ বা সহায়তা সাদরে গ্রহণ করা হয়।
+                    </p>
+                    <div class="space-y-4 pt-2">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-brand-100 text-brand-800 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-building-columns" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800">ইউনিয়ন পরিষদ কার্যালয়</h3>
+                                <p class="text-slate-600 text-sm">২ নং বাগালী ইউনিয়ন, উপজেলা: কয়রা, খুলনা।</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-brand-100 text-brand-800 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800">অনলাইন ফান্ড সাপোর্ট (প্রবাসী ভাইদের জন্য)</h3>
+                                <p class="text-slate-600 text-sm">বিকাশ / নগদ (তহবিল নম্বর): <strong>০১৭০০-০০০০০০</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-slate-50 p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm">
+                    <form id="village-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                        <div>
+                            <label for="user-name" class="block text-sm font-medium text-slate-700 mb-1">আপনার নাম *</label>
+                            <input type="text" id="user-name" required placeholder="আপনার পূর্ণ নাম লিখুন" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="user-phone" class="block text-sm font-medium text-slate-700 mb-1">ফোন নম্বর *</label>
+                                <input type="tel" id="user-phone" required placeholder="০১৭xxxxxxxx" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                            </div>
+                            <div>
+                                <label for="user-location" class="block text-sm font-medium text-slate-700 mb-1">বর্তমান অবস্থান</label>
+                                <select id="user-location" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                                    <option>গ্রামে বসবাসরত</option>
+                                    <option>দেশের অন্য শহরে</option>
+                                    <option>প্রবাসী (বিদেশে)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="user-subject" class="block text-sm font-medium text-slate-700 mb-1">বিষয়</label>
+                            <select id="user-subject" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                                <option>সাধারণ মতামত / পরামর্শ</option>
+                                <option>উন্নয়ন ফাণ্ডে অনুদান সহায়তা</option>
+                                <option>অভিযোগ বা সমস্যা জানানোর জন্য</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="user-message" class="block text-sm font-medium text-slate-700 mb-1">বার্তা বা বিবরণ *</label>
+                            <textarea id="user-message" rows="4" required placeholder="আপনার বিস্তারিত মন্তব্য বা অনুদানের ইচ্ছা লিখুন..." class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-3 rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> বার্তা পাঠান
+                        </button>
+                    </form>
+                    <div id="form-alert" class="hidden mt-4 p-4 rounded-xl text-sm font-medium" role="alert"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modals Area -->
+    <!-- Notice Detail Modal -->
+    <div id="notice-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative animate-fade-in">
+            <button onclick="closeModal('notice-modal')" aria-label="বন্ধ করুন" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <!-- Notice Form Modal (Add / Edit) -->
+    <div id="notice-form-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative animate-fade-in">
+            <button onclick="closeModal('notice-form-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-2xl font-bold text-brand-900 mb-4" id="notice-form-title">নতুন নোটিশ যোগ করুন</h3>
+            <form onsubmit="saveNotice(event)" class="space-y-4">
+                <input type="hidden" id="notice-id">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">নোটিশের শিরোনাম *</label>
+                    <input type="text" id="form-notice-title" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">ক্যাটাগরি *</label>
+                        <select id="form-notice-category" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                            <option value="agriculture">কৃষি</option>
+                            <option value="health">স্বাস্থ্য</option>
+                            <option value="education">শিক্ষা</option>
+                            <option value="general">সাধারণ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">তারিখ *</label>
+                        <input type="text" id="form-notice-date" required placeholder="১০ অক্টোবর, ২০২৬" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">সংক্ষিপ্ত বিবরণ *</label>
+                    <input type="text" id="form-notice-summary" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">বিস্তারিত বিবরণ *</label>
+                    <textarea id="form-notice-details" rows="3" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-xl transition">সংরক্ষণ করুন</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contact Form Modal (Add / Edit) -->
+    <div id="contact-form-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative animate-fade-in">
+            <button onclick="closeModal('contact-form-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-2xl font-bold text-brand-900 mb-4" id="contact-form-title">নতুন সেবা যোগ করুন</h3>
+            <form onsubmit="saveContact(event)" class="space-y-4">
+                <input type="hidden" id="contact-id">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">সেবার নাম/শিরোনাম *</label>
+                    <input type="text" id="form-contact-title" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">ক্যাটাগরি *</label>
+                        <input type="text" id="form-contact-category" placeholder="ডাক্তার, পুলিশ ইত্যাদি" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">আইকন ক্লাস</label>
+                        <select id="form-contact-icon" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                            <option value="fa-user-doctor">ডাক্তার</option>
+                            <option value="fa-truck-medical">অ্যাম্বুলেন্স</option>
+                            <option value="fa-shield-halved">নিরাপত্তা</option>
+                            <option value="fa-bolt text-amber-500">বিদ্যুৎ</option>
+                            <option value="fa-wheat-awn text-emerald-600">কৃষি</option>
+                            <option value="fa-landmark text-blue-600">প্রশাসন</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">দায়িত্বপ্রাপ্ত ব্যক্তি *</label>
+                    <input type="text" id="form-contact-person" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">ফোন নম্বর *</label>
+                    <input type="text" id="form-contact-phone" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                </div>
+                <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-xl transition">সংরক্ষণ করুন</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Market Form Modal (Add / Edit) -->
+    <div id="market-form-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative animate-fade-in">
+            <button onclick="closeModal('market-form-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-2xl font-bold text-brand-900 mb-4" id="market-form-title">নতুন বাজার পণ্য যোগ করুন</h3>
+            <form onsubmit="saveMarketItem(event)" class="space-y-4">
+                <input type="hidden" id="market-id">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">পণ্যের নাম *</label>
+                        <input type="text" id="form-market-name" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">একক *</label>
+                        <input type="text" id="form-market-unit" placeholder="কেজি / মন" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">পাইকারি দর *</label>
+                        <input type="text" id="form-market-wholesale" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">খুচরা দর *</label>
+                        <input type="text" id="form-market-retail" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">অবস্থা *</label>
+                        <select id="form-market-status" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                            <option value="up">বৃদ্ধি পেয়েছে (Up)</option>
+                            <option value="down">কমেছে (Down)</option>
+                            <option value="same">অপরিবর্তিত (Same)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">পরিবর্তন বিবরণ *</label>
+                        <input type="text" id="form-market-change" placeholder="+৫০ টাকা / অপরিবর্তিত" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-xl transition">সংরক্ষণ করুন</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auth Modals -->
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative animate-fade-in">
+            <button onclick="closeModal('login-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-2xl font-bold text-brand-900 mb-1">লগইন করুন</h3>
+            <p class="text-sm text-slate-500 mb-4">আপনার ইমেইল ও পাসওয়ার্ড প্রদান করুন</p>
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">ইমেইল ঠিকানা</label>
+                    <input type="email" id="login-email" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">পাসওয়ার্ড</label>
+                    <input type="password" id="login-password" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                </div>
+                <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-xl transition">লগইন</button>
+            </form>
+            <div id="login-msg" class="mt-3 text-xs text-center font-medium"></div>
+            <p class="mt-4 text-xs text-center text-slate-600">অ্যাকোউন্ট নেই? <button onclick="switchAuthModal('register')" class="text-brand-700 font-bold hover:underline">নতুন অ্যাকাউন্ট খুলুন</button></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="register-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative animate-fade-in">
+            <button onclick="closeModal('register-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-2xl font-bold text-brand-900 mb-1">রেজিস্ট্রেশন করুন</h3>
+            <p class="text-sm text-slate-500 mb-4">তথ্য দিন, এডমিন এপ্রুভালের পর লগইন করতে পারবেন</p>
+            <form onsubmit="handleRegister(event)" class="space-y-3">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">আপনার পূর্ণ নাম</label>
+                    <input type="text" id="reg-name" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">ইমেইল ঠিকানা</label>
+                    <input type="email" id="reg-email" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">পাসওয়ার্ড</label>
+                    <input type="password" id="reg-password" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                </div>
+                <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-xl transition">রেজিস্ট্রেশন জমা দিন</button>
+            </form>
+            <div id="reg-msg" class="mt-3 text-xs text-center font-medium"></div>
+            <p class="mt-4 text-xs text-center text-slate-600">আগে থেকেই অ্যাকাউন্ট আছে? <button onclick="switchAuthModal('login')" class="text-brand-700 font-bold hover:underline">লগইন করুন</button></p>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal (Updated with Messages Tab) -->
+    <div id="admin-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl max-w-4xl w-full p-6 shadow-2xl relative animate-fade-in max-h-[90vh] flex flex-col">
+            <button onclick="closeModal('admin-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-2xl font-bold text-brand-900 mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-user-shield text-amber-500"></i> এডমিন কন্ট্রোল প্যানেল
+            </h3>
+            <p class="text-sm text-slate-500 mb-4">ইউজার অ্যাকাউন্ট অনুমোদন ও ব্যবহারকারীদের পাঠানো বার্তা পরিচালনা করুন</p>
+
+            <!-- Admin Nav Tabs -->
+            <div class="flex border-b border-slate-200 mb-4 gap-2">
+                <button id="admin-tab-users" onclick="switchAdminTab('users')" class="px-4 py-2 font-bold border-b-2 border-brand-700 text-brand-700 text-sm flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-users"></i> ইউজার অনুমোদন
+                </button>
+                <button id="admin-tab-messages" onclick="switchAdminTab('messages')" class="px-4 py-2 font-bold text-slate-500 border-b-2 border-transparent hover:text-slate-700 text-sm flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-envelope"></i> বার্তা/মতামত তালিকা <span id="admin-msg-badge" class="hidden bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full"></span>
+                </button>
+            </div>
+            
+            <!-- Tab 1: User Approval Table -->
+            <div id="admin-users-view" class="overflow-y-auto flex-grow border border-slate-200 rounded-xl">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-700 border-b">
+                            <th class="p-3">নাম</th>
+                            <th class="p-3">ইমেইল</th>
+                            <th class="p-3">স্ট্যাটাস</th>
+                            <th class="p-3 text-right">অনুমোদন অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-user-table" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+
+            <!-- Tab 2: User Messages List -->
+            <div id="admin-messages-view" class="overflow-y-auto flex-grow border border-slate-200 rounded-xl p-4 hidden space-y-3">
+                <div id="admin-messages-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-brand-900 text-slate-300 mt-auto border-t border-brand-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-leaf" aria-hidden="true"></i>
+                        </div>
+                        <span class="text-xl font-bold text-white">আমাদের বাঁশখালী</span>
+                    </div>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        একটি সুন্দর, স্বচ্ছ ও ডিজিটালি রূপান্তরের পথে এগিয়ে চলা আদর্শ গ্রাম। সকল তথ্য সবার জন্য উন্মুক্ত।
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-white font-semibold mb-3">দ্রুত লিঙ্ক</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#notices" class="hover:text-emerald-400 transition">নোটিশ বোর্ড</a></li>
+                        <li><a href="#services" class="hover:text-emerald-400 transition">জরুরি পরিচিতি</a></li>
+                        <li><a href="#market" class="hover:text-emerald-400 transition">বাজারের দরদাম</a></li>
+                        <li><a href="#contact" class="hover:text-emerald-400 transition">উন্নয়ন তহবিল ও পরামর্শ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-semibold mb-3">যোগাযোগ</h3>
+                    <p class="text-sm text-slate-400 mb-1"><i class="fa-solid fa-location-dot text-emerald-500 mr-2" aria-hidden="true"></i> গ্রাম: বাঁশখালী, ওয়ার্ড: ৬নং, ইউনিয়ন: ২নং বাগালী, উপজেলা: কয়রা, জেলা: খুলনা</p>
+                    <p class="text-sm text-slate-400 mb-1"><i class="fa-solid fa-envelope text-emerald-500 mr-2" aria-hidden="true"></i> infobanshkhali5@gmail.com </p>
+                    <p class="text-sm text-slate-400"><i class="fa-solid fa-phone text-emerald-500 mr-2" aria-hidden="true"></i> +৮৮০ ১৭০০-০০০০০০</p>
+                </div>
+            </div>
+            <div class="border-t border-emerald-800/60 mt-8 pt-6 text-center text-xs text-slate-400">
+                &copy; ২০২৬ বাঁশখালী গ্রাম ডিজিটাল পোর্টাল। সর্বস্বত্ব সংরক্ষিত। Made By Dipranjan
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Admin Config Credentials
+        const ADMIN_EMAIL = "freelancerdip25@gmail.com";
+        const ADMIN_PASS = "Dip25@village";
+
+        // Initial Data Sets
+        const initialNotices = [
+            { id: 1, title: 'বিনামূল্যে চক্ষু ও ডায়াবেটিস ক্যাম্প', category: 'health', categoryBn: 'স্বাস্থ্য', date: '১০ অক্টোবর, ২০২৬', summary: 'আগামী শুক্রবার গ্রাম্য প্রাথমিক বিদ্যালয়ে বিশেষজ্ঞ ডাক্তার দ্বারা বিনামূল্যে চোখ পরীক্ষা...', details: 'গ্রামের সকল সাধারণ মানুষের জানানো যাচ্ছে যে, আগামী শুক্রবার সকাল ৯:০০ টা থেকে বিকেল ৪:০০ টা পর্যন্ত প্রাথমিক বিদ্যালয় মাঠে একটি ফ্রি স্বাস্থ্য ক্যাম্পের আয়োজন করা হয়েছে। অভিজ্ঞ ডাক্তারগণ উপস্থিত থাকবেন।' },
+            { id: 2, title: 'রবি শস্য ও গম বীজে সরকারি ৫০% ভর্তুকি', category: 'agriculture', categoryBn: 'কৃষি', date: '০৮ অক্টোবর, ২০২৬', summary: 'উপজেলা কৃষি অফিস থেকে নতুন সার ও উন্নত জাতের বীজের ওপর প্রণোদনা প্রদান করা হবে...', details: 'কৃষক ভাইদের জন্য সুখবর! ব্লক সুপারভাইজারের নিকট নাম নিবন্ধন করে ৫০% নামমাত্র মূল্যে গমের উন্নত বীজ এবং ডিএপি সার সংগ্রহ করুন। আবেদনের শেষ তারিখ ১৫ অক্টোবর।' },
+            { id: 3, title: 'মাধ্যমিক উপবৃত্তি ও স্কলারশিপ ফরম বিতরণ', category: 'education', categoryBn: 'শিক্ষা', date: '০৫ অক্টোবর, ২০২৬', summary: 'মেধাবী ও অসচ্ছল ছাত্র-ছাত্রীদের উপবৃত্তির আবেদনের শেষ তারিখ নির্ধারণ করা হয়েছে...', details: 'উচ্চ বিদ্যালয় থেকে ২০২৬ শিক্ষাবর্ষের সকল ৬ষ্ঠ থেকে ১০ম শ্রেণীর শিক্ষার্থীদের জন্য উপবৃত্তির আবেদন ফর্ম ছাড়া হয়েছে। শিক্ষার্থীগণ প্রধান শিক্ষকের কক্ষ থেকে ফরম সংগ্রহ করতে পারেন।' },
+            { id: 4, title: 'গ্রামের কেন্দ্রীয় মসজিদ সংস্কার সংক্রান্ত সাধারণ সভা', category: 'general', categoryBn: 'সাধারণ', date: '০২ অক্টোবর, ২০২৬', summary: 'সকল গ্রামবাসীর উপস্থিতিতে নতুন ওজুরখানা ও গম্বুজ মেরামতের বৈঠক...', details: 'আগামী শনিবার এশার নামাজের পর মসজিদ প্রাঙ্গণে এক মতবিনিময় সভা অনুষ্ঠিত হবে। প্রবাসী ভাইদের অনুদান ও গ্রামের তহবিল সংক্রান্ত আপডেট দেয়া হবে।' }
+        ];
+
+        const initialContacts = [
+            { id: 1, title: 'উপজেলা স্বাস্থ্য কমপ্লেক্স (জরুরি বিভাগ)', category: 'ডাক্তার ও চিকিৎসা', icon: 'fa-user-doctor', phone: '০১৭০০০১-১২২২৩৩', person: 'ডা: মোঃ রফিকুল ইসলাম' },
+            { id: 2, title: 'জরুরি অ্যাম্বুলেন্স সেবা', category: 'পরিবহন', icon: 'fa-truck-medical', phone: '০১৯১১-২২ ৩৩৪৪', person: 'চালক: মোঃ কালাম' },
+            { id: 3, title: 'গ্রাম পুলিশ ও নৈশ প্রহরী', category: 'নিরাপত্তা', icon: 'fa-shield-halved', phone: '০১৮১২-৩৪৫৬৭৮', person: 'মোঃ রহমত মিঞা' },
+            { id: 4, title: 'পল্লী বিদ্যুৎ অভিযোগ কেন্দ্র', category: 'বিদ্যুৎ', icon: 'fa-bolt text-amber-500', phone: '০১৬৭৮-৯৯০০১১', person: 'উপকেন্দ্র বাঁশখালী' },
+            { id: 5, title: 'ব্লক কৃষি কর্মকর্তা', category: 'কৃষি পরামর্শ', icon: 'fa-wheat-awn text-emerald-600', phone: '০১৫৫৫-৬৭৭৮৮', person: 'কৃষিবিদ আব্দুল হাদি' },
+            { id: 6, title: 'ইউপি চেয়ারম্যান কার্যালয়', category: 'প্রশাসন', icon: 'fa-landmark text-blue-600', phone: '০১৭১১-৯৯৮৮৭৭', person: 'চেয়ারম্যান মহোদয়' }
+        ];
+
+        const initialMarket = [
+            { id: 1, name: 'আমন ধান (নতুন)', unit: 'মন (৪০ কেজি)', wholesale: '১,২০০ - ১,২৫০ টাকা', retail: '১,৩০০ টাকা', status: 'up', change: '+৫০ টাকা' },
+            { id: 2, name: 'আলু (ডায়মন্ড)', unit: 'কেজি', wholesale: '৩৬ টাকা', retail: '৪২ টাকা', status: 'same', change: 'অপরিবর্তিত' },
+            { id: 3, name: 'খাটি গরুর দুধ', unit: 'লিটার', wholesale: '৭০ টাকা', retail: '৮০ টাকা', status: 'same', change: 'অপরিবর্তিত' },
+            { id: 4, name: 'সরিষা', unit: 'মন (৪০ কেজি)', wholesale: '৩,২০০ টাকা', retail: '৩,৪০০ টাকা', status: 'down', change: '-১০০ টাকা' },
+            { id: 5, name: 'দেশি ডিম', unit: 'হালি (৪টি)', wholesale: '৫০ টাকা', retail: '৫৫ টাকা', status: 'up', change: '+২ টাকা' },
+            { id: 6, name: 'কাঁচামরিচ', unit: 'কেজি', wholesale: '১১০ টাকা', retail: '১৩০ টাকা', status: 'down', change: '-২০ টাকা' }
+        ];
+
+        // Local Storage Handlers
+        function getUsers() { return JSON.parse(localStorage.getItem('village_users') || '[]'); }
+        function setUsers(users) { localStorage.setItem('village_users', JSON.stringify(users)); }
+        function getCurrentUser() { return JSON.parse(localStorage.getItem('current_logged_user') || 'null'); }
+        function setCurrentUser(user) { localStorage.setItem('current_logged_user', JSON.stringify(user)); }
+
+        function getStoredData(key, fallback) {
+            const data = localStorage.getItem(key);
+            if (!data) {
+                localStorage.setItem(key, JSON.stringify(fallback));
+                return fallback;
+            }
+            return JSON.parse(data);
+        }
+
+        function setStoredData(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        // Authorization Checker
+        function isUserAuthorized() {
+            const user = getCurrentUser();
+            return user && (user.role === 'admin' || user.status === 'approved');
+        }
+
+        // Initialize Admin Account in Storage
+        function initAdminUser() {
+            let users = getUsers();
+            const adminExist = users.find(u => u.email === ADMIN_EMAIL);
+            if (!adminExist) {
+                users.push({ name: 'এডমিন (Dipranjan)', email: ADMIN_EMAIL, password: ADMIN_PASS, status: 'approved', role: 'admin' });
+                setUsers(users);
+            }
+        }
+
+        // Auth Bar Render & Admin Top Navigation Display Logic
+        function renderAuthBar() {
+            const container = document.getElementById('auth-bar-container');
+            const adminNavContainer = document.getElementById('admin-nav-item');
+            const mobileAdminNavContainer = document.getElementById('mobile-admin-nav-item');
+            const currentUser = getCurrentUser();
+            
+            if (currentUser) {
+                let adminBtn = '';
+                if (currentUser.role === 'admin') {
+                    // Count Pending Users & Messages for Notification Badge
+                    const users = getUsers();
+                    const pendingCount = users.filter(u => u.status === 'pending' && u.role !== 'admin').length;
+                    const messages = getStoredData('village_messages', []);
+                    const totalBadgeCount = pendingCount + messages.length;
+
+                    const badgeHtml = totalBadgeCount > 0 ? `<span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full ml-1">${totalBadgeCount}</span>` : '';
+
+                    adminBtn = `<button onclick="openModal('admin-modal'); renderAdminPanel();" class="bg-amber-500 text-slate-900 px-2 py-0.5 rounded font-bold hover:bg-amber-400 transition inline-flex items-center"><i class="fa-solid fa-user-gear mr-1"></i> এডমিন ড্যাশবোর্ড ${badgeHtml}</button>`;
+                    
+                    // Header Navbar Link (Visible exclusively to Admin)
+                    adminNavContainer.innerHTML = `
+                        <button onclick="openModal('admin-modal'); renderAdminPanel();" class="px-3 py-2 rounded-md bg-amber-100 text-amber-900 font-bold hover:bg-amber-200 transition flex items-center gap-1">
+                            <i class="fa-solid fa-user-shield text-amber-600"></i> এডমিন প্যানেল ${badgeHtml}
+                        </button>
+                    `;
+                    mobileAdminNavContainer.innerHTML = `
+                        <button onclick="openModal('admin-modal'); renderAdminPanel();" class="mobile-link w-full text-left px-3 py-2 rounded-md bg-amber-100 text-amber-900 font-bold hover:bg-amber-200 transition flex items-center justify-between">
+                            <span><i class="fa-solid fa-user-shield text-amber-600 mr-1"></i> এডমিন প্যানেল</span> ${badgeHtml}
+                        </button>
+                    `;
+                } else {
+                    adminNavContainer.innerHTML = '';
+                    mobileAdminNavContainer.innerHTML = '';
+                }
+
+                container.innerHTML = `
+                    <span class="bg-emerald-800 text-emerald-100 px-2 py-0.5 rounded"><i class="fa-solid fa-user text-emerald-300 mr-1"></i> ${currentUser.name}</span>
+                    ${adminBtn}
+                    <button onclick="handleLogout()" class="bg-red-700 hover:bg-red-800 text-white px-2 py-0.5 rounded transition"><i class="fa-solid fa-right-from-bracket"></i> লগআউট</button>
+                `;
+            } else {
+                adminNavContainer.innerHTML = '';
+                mobileAdminNavContainer.innerHTML = '';
+                container.innerHTML = `
+                    <button onclick="openModal('login-modal')" class="bg-emerald-700 hover:bg-emerald-600 text-white px-2.5 py-0.5 rounded transition"><i class="fa-solid fa-right-to-bracket mr-1"></i> লগইন</button>
+                    <button onclick="openModal('register-modal')" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold px-2.5 py-0.5 rounded transition"><i class="fa-solid fa-user-plus mr-1"></i> সাইন আপ</button>
+                `;
+            }
+
+            // Render Add Buttons if Authorized
+            const isAuth = isUserAuthorized();
+            document.getElementById('add-notice-btn-container').innerHTML = isAuth ? `<button onclick="openNoticeForm()" class="bg-emerald-700 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-emerald-800 transition"><i class="fa-solid fa-plus mr-1"></i> নতুন নোটিশ</button>` : '';
+            document.getElementById('add-contact-btn-container').innerHTML = isAuth ? `<button onclick="openContactForm()" class="bg-emerald-700 text-white px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-800 transition"><i class="fa-solid fa-plus mr-1"></i> নতুন সেবা</button>` : '';
+            document.getElementById('add-market-btn-container').innerHTML = isAuth ? `<button onclick="openMarketForm()" class="bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-emerald-800 transition"><i class="fa-solid fa-plus mr-1"></i> নতুন পণ্য</button>` : '';
+
+            // Re-render components to show/hide edit-delete actions
+            renderNotices(currentFilter, document.getElementById('notice-search').value);
+            renderContacts(document.getElementById('contact-search').value);
+            renderMarketTable();
+        }
+
+        // Auth Operations
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const password = document.getElementById('reg-password').value;
+            const msg = document.getElementById('reg-msg');
+            let users = getUsers();
+            
+            if (users.find(u => u.email === email)) {
+                msg.className = "mt-3 text-xs text-center font-medium text-red-600";
+                msg.innerText = "এই ইমেইল দিয়ে ইতঃপূর্বে অ্যাকাউন্ট খোলা হয়েছে!";
+                return;
+            }
+            users.push({ name, email, password, status: 'pending', role: 'user' });
+            setUsers(users);
+            msg.className = "mt-3 text-xs text-center font-medium text-emerald-600";
+            msg.innerText = "রেজিস্ট্রেশন সফল হয়েছে! এডমিন অনুমোদনের পর আপনি লগইন করতে পারবেন।";
+            e.target.reset();
+            renderAuthBar();
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value;
+            const msg = document.getElementById('login-msg');
+            let users = getUsers();
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (!user) {
+                msg.className = "mt-3 text-xs text-center font-medium text-red-600";
+                msg.innerText = "ভুল ইমেইল অথবা পাসওয়ার্ড!";
+                return;
+            }
+            if (user.status === 'pending') {
+                msg.className = "mt-3 text-xs text-center font-medium text-amber-600";
+                msg.innerText = "আপনার অ্যাকাউন্টটি এখনো এডমিন দ্বারা অনুমোদিত (Approve) হয়নি। দয়া করে অপেক্ষা করুন।";
+                return;
+            }
+            if (user.status === 'rejected') {
+                msg.className = "mt-3 text-xs text-center font-medium text-red-600";
+                msg.innerText = "আপনার অ্যাকাউন্ট আবেদনের অনুরোধটি এডমিন কর্তৃক বাতিল (Rejected) করা হয়েছে!";
+                return;
+            }
+            setCurrentUser(user);
+            msg.className = "mt-3 text-xs text-center font-medium text-emerald-600";
+            msg.innerText = "লগইন সফল হয়েছে!";
+            setTimeout(() => {
+                closeModal('login-modal');
+                renderAuthBar();
+            }, 800);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('current_logged_user');
+            renderAuthBar();
+        }
+
+        // Admin Panel Functions (Approve/Reject Logic & Messages View)
+        function renderAdminPanel() {
+            renderAdminUsers();
+            renderAdminMessages();
+        }
+
+        function switchAdminTab(tab) {
+            const usersTabBtn = document.getElementById('admin-tab-users');
+            const messagesTabBtn = document.getElementById('admin-tab-messages');
+            const usersView = document.getElementById('admin-users-view');
+            const messagesView = document.getElementById('admin-messages-view');
+
+            if(tab === 'users') {
+                usersTabBtn.className = "px-4 py-2 font-bold border-b-2 border-brand-700 text-brand-700 text-sm flex items-center gap-1.5 transition";
+                messagesTabBtn.className = "px-4 py-2 font-bold text-slate-500 border-b-2 border-transparent hover:text-slate-700 text-sm flex items-center gap-1.5 transition";
+                usersView.classList.remove('hidden');
+                messagesView.classList.add('hidden');
+            } else {
+                messagesTabBtn.className = "px-4 py-2 font-bold border-b-2 border-brand-700 text-brand-700 text-sm flex items-center gap-1.5 transition";
+                usersTabBtn.className = "px-4 py-2 font-bold text-slate-500 border-b-2 border-transparent hover:text-slate-700 text-sm flex items-center gap-1.5 transition";
+                messagesView.classList.remove('hidden');
+                usersView.classList.add('hidden');
+            }
+        }
+
+        function renderAdminUsers() {
+            const tbody = document.getElementById('admin-user-table');
+            const users = getUsers();
+            tbody.innerHTML = '';
+            
+            users.forEach((u, index) => {
+                if (u.role === 'admin') return;
+                const tr = document.createElement('tr');
+                
+                let badge = '';
+                if(u.status === 'approved') {
+                    badge = `<span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded font-semibold"><i class="fa-solid fa-circle-check mr-1"></i>Approved</span>`;
+                } else if(u.status === 'rejected') {
+                    badge = `<span class="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded font-semibold"><i class="fa-solid fa-circle-xmark mr-1"></i>Rejected</span>`;
+                } else {
+                    badge = `<span class="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded font-semibold"><i class="fa-solid fa-clock mr-1"></i>Pending</span>`;
+                }
+
+                let actionBtns = '';
+                if(u.status === 'pending') {
+                    actionBtns = `
+                        <button onclick="updateUserStatus(${index}, 'approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded transition mr-1" title="অনুমোদন দিন"><i class="fa-solid fa-check mr-1"></i>Approve</button>
+                        <button onclick="updateUserStatus(${index}, 'rejected')" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2.5 py-1 rounded transition mr-1" title="আবেদন বাতিল করুন"><i class="fa-solid fa-ban mr-1"></i>Reject</button>
+                    `;
+                } else if(u.status === 'approved') {
+                    actionBtns = `
+                        <button onclick="updateUserStatus(${index}, 'rejected')" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2.5 py-1 rounded transition mr-1"><i class="fa-solid fa-ban mr-1"></i>Reject</button>
+                    `;
+                } else if(u.status === 'rejected') {
+                    actionBtns = `
+                        <button onclick="updateUserStatus(${index}, 'approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded transition mr-1"><i class="fa-solid fa-check mr-1"></i>Approve</button>
+                    `;
+                }
+                
+                tr.innerHTML = `
+                    <td class="p-3 font-medium text-slate-800">${u.name}</td>
+                    <td class="p-3 text-slate-600">${u.email}</td>
+                    <td class="p-3">${badge}</td>
+                    <td class="p-3 text-right">
+                        ${actionBtns}
+                        <button onclick="deleteUser(${index})" class="bg-red-100 hover:bg-red-200 text-red-700 text-xs px-2 py-1 rounded transition" title="ইউজার অ্যাকাউন্ট মুছে ফেলুন"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            if (tbody.children.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-slate-400">কোনো সাধারণ ইউজার বা পেন্ডিং অ্যাকাউন্ট পাওয়া যায়নি।</td></tr>`;
+            }
+        }
+
+        function renderAdminMessages() {
+            const container = document.getElementById('admin-messages-container');
+            const messages = getStoredData('village_messages', []);
+            const badge = document.getElementById('admin-msg-badge');
+
+            if(messages.length > 0) {
+                badge.innerText = messages.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            container.innerHTML = '';
+            if(messages.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-slate-400">কোনো নতুন বার্তা বা মতামত জমা পড়েনি।</div>`;
+                return;
+            }
+
+            messages.forEach((msg, idx) => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-50 border border-slate-200 p-4 rounded-xl relative hover:shadow-sm transition";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start gap-2 mb-2">
+                        <div>
+                            <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">${msg.subject}</span>
+                            <h4 class="font-bold text-slate-800 text-base mt-1">${msg.name} <span class="text-xs text-slate-500 font-normal">(${msg.location})</span></h4>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i>${msg.date}</span>
+                            <button onclick="deleteUserMessage(${idx})" class="text-red-500 hover:text-red-700 text-xs p-1" title="বার্তা মুছুন"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm leading-relaxed mb-3 bg-white p-3 rounded-lg border border-slate-100">${msg.message}</p>
+                    <div class="text-xs text-slate-600 flex items-center gap-3">
+                        <span><i class="fa-solid fa-phone text-emerald-600 mr-1"></i>${msg.phone}</span>
+                        <a href="tel:${msg.phone}" class="text-brand-700 font-bold hover:underline"><i class="fa-solid fa-phone-flip mr-1"></i>কল দিন</a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function deleteUserMessage(index) {
+            if(confirm('আপনি কি এই বার্তাটি মুছে ফেলতে চান?')) {
+                let messages = getStoredData('village_messages', []);
+                messages.splice(index, 1);
+                setStoredData('village_messages', messages);
+                renderAdminMessages();
+                renderAuthBar();
+            }
+        }
+
+        function updateUserStatus(index, status) {
+            let users = getUsers();
+            users[index].status = status;
+            setUsers(users);
+            renderAdminPanel();
+            renderAuthBar();
+        }
+
+        function deleteUser(index) {
+            if(confirm('আপনি কি সত্যিই এই ইউজারকে মুছে ফেলতে চান?')) {
+                let users = getUsers();
+                users.splice(index, 1);
+                setUsers(users);
+                renderAdminPanel();
+                renderAuthBar();
+            }
+        }
+
+        // Weather API Integration
+        async function fetchWeatherData() {
+            const weatherContainer = document.getElementById('weather-info');
+            const latitude = 22.0494;
+            const longitude = 91.9562;
+            const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
+            
+            const toBengaliNumber = (str) => {
+                const bnNumbers = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+                return String(str).replace(/[0-9]/g, (digit) => bnNumbers[digit]);
+            };
+
+            const getWeatherCondition = (code) => {
+                if (code === 0) return { text: 'পরিষ্কার আকাশ', icon: 'fa-sun text-amber-400' };
+                if (code >= 1 && code <= 3) return { text: 'আংশিক মেঘলা', icon: 'fa-cloud-sun text-amber-400' };
+                if (code === 45 || code === 48) return { text: 'কুয়াশাচ্ছন্ন', icon: 'fa-smog text-slate-300' };
+                if (code >= 51 && code <= 67) return { text: 'হালকা বৃষ্টি', icon: 'fa-cloud-rain text-blue-400' };
+                if (code >= 80 && code <= 82) return { text: 'মুষলধারে বৃষ্টি', icon: 'fa-cloud-showers-heavy text-blue-400' };
+                if (code >= 95) return { text: 'বজ্রবৃষ্টি', icon: 'fa-cloud-bolt text-yellow-400' };
+                return { text: 'মেঘলা', icon: 'fa-cloud text-slate-300' };
+            };
+
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error('Network error');
+                const data = await response.json();
+                const temp = Math.round(data.current_weather.temperature);
+                const code = data.current_weather.weathercode;
+                const condition = getWeatherCondition(code);
+                
+                weatherContainer.innerHTML = `
+                    <i class="fa-solid ${condition.icon} mr-1" aria-hidden="true"></i>
+                    <span>আজকের আবহাওয়া: <strong>${toBengaliNumber(temp)}°C</strong> (${condition.text})</span>
+                `;
+            } catch (error) {
+                weatherContainer.innerHTML = `
+                    <i class="fa-solid fa-cloud-sun text-amber-400 mr-1" aria-hidden="true"></i>
+                    <span>আজকের আবহাওয়া: ২৮°C (আংশিক মেঘলা)</span>
+                `;
+            }
+        }
+
+        // Dynamic Notice Operations
+        let currentFilter = 'all';
+
+        function renderNotices(filter = 'all', searchQuery = '') {
+            const container = document.getElementById('notice-container');
+            container.innerHTML = '';
+            const notices = getStoredData('village_notices', initialNotices);
+            const isAuth = isUserAuthorized();
+
+            const filtered = notices.filter(item => {
+                const matchesFilter = filter === 'all' || item.category === filter;
+                const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) || item.summary.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesFilter && matchesSearch;
+            });
+
+            if(filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-slate-500">
+                        <i class="fa-solid fa-folder-open text-4xl mb-3 block" aria-hidden="true"></i>
+                        কোনো নোটিশ পাওয়া যায়নি।
+                    </div>`;
+                return;
+            }
+
+            filtered.forEach(notice => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between";
+                
+                let editBtns = isAuth ? `
+                    <div class="flex gap-2">
+                        <button onclick="openNoticeForm(${notice.id})" class="text-xs text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteNotice(${notice.id})" class="text-xs text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                ` : '';
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between text-xs text-slate-500 mb-3">
+                            <span class="bg-brand-50 text-brand-700 px-2.5 py-1 rounded-md font-medium border border-brand-100">${notice.categoryBn}</span>
+                            <div class="flex items-center gap-2">
+                                <span><i class="fa-regular fa-calendar mr-1" aria-hidden="true"></i>${notice.date}</span>
+                                ${editBtns}
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2 leading-snug">${notice.title}</h3>
+                        <p class="text-slate-600 text-sm mb-4 leading-relaxed">${notice.summary}</p>
+                    </div>
+                    <button onclick="openNoticeModal(${notice.id})" class="text-brand-700 hover:text-brand-800 font-semibold text-sm flex items-center gap-1.5 pt-2 border-t border-slate-100">
+                        বিস্তারিত পড়ুন <i class="fa-solid fa-arrow-right-long text-xs" aria-hidden="true"></i>
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function openNoticeForm(id = null) {
+            const modalTitle = document.getElementById('notice-form-title');
+            document.getElementById('notice-id').value = id || '';
+            if (id) {
+                modalTitle.innerText = "নোটিশ সম্পাদনা করুন";
+                const notices = getStoredData('village_notices', initialNotices);
+                const item = notices.find(n => n.id === id);
+                if (item) {
+                    document.getElementById('form-notice-title').value = item.title;
+                    document.getElementById('form-notice-category').value = item.category;
+                    document.getElementById('form-notice-date').value = item.date;
+                    document.getElementById('form-notice-summary').value = item.summary;
+                    document.getElementById('form-notice-details').value = item.details;
+                }
+            } else {
+                modalTitle.innerText = "নতুন নোটিশ যোগ করুন";
+                document.getElementById('form-notice-title').value = '';
+                document.getElementById('form-notice-date').value = new Date().toLocaleDateString('bn-BD');
+                document.getElementById('form-notice-summary').value = '';
+                document.getElementById('form-notice-details').value = '';
+            }
+            openModal('notice-form-modal');
+        }
+
+        function saveNotice(e) {
+            e.preventDefault();
+            let notices = getStoredData('village_notices', initialNotices);
+            const id = document.getElementById('notice-id').value;
+            const categoryMap = { agriculture: 'কৃষি', health: 'স্বাস্থ্য', education: 'শিক্ষা', general: 'সাধারণ' };
+            const category = document.getElementById('form-notice-category').value;
+
+            const newItem = {
+                id: id ? parseInt(id) : Date.now(),
+                title: document.getElementById('form-notice-title').value,
+                category: category,
+                categoryBn: categoryMap[category] || 'সাধারণ',
+                date: document.getElementById('form-notice-date').value,
+                summary: document.getElementById('form-notice-summary').value,
+                details: document.getElementById('form-notice-details').value
+            };
+
+            if (id) {
+                const index = notices.findIndex(n => n.id === parseInt(id));
+                if (index !== -1) notices[index] = newItem;
+            } else {
+                notices.unshift(newItem);
+            }
+            setStoredData('village_notices', notices);
+            closeModal('notice-form-modal');
+            renderNotices(currentFilter, document.getElementById('notice-search').value);
+        }
+
+        function deleteNotice(id) {
+            if (confirm('আপনি কি নিশ্চিত যে এই নোটিশটি মুছে ফেলতে চান?')) {
+                let notices = getStoredData('village_notices', initialNotices);
+                notices = notices.filter(n => n.id !== id);
+                setStoredData('village_notices', notices);
+                renderNotices(currentFilter, document.getElementById('notice-search').value);
+            }
+        }
+
+        // Dynamic Contacts Operations
+        function renderContacts(query = '') {
+            const container = document.getElementById('contacts-container');
+            container.innerHTML = '';
+            const contacts = getStoredData('village_contacts', initialContacts);
+            const isAuth = isUserAuthorized();
+
+            const filtered = contacts.filter(c => 
+                c.title.toLowerCase().includes(query.toLowerCase()) || 
+                c.person.toLowerCase().includes(query.toLowerCase()) || 
+                c.category.toLowerCase().includes(query.toLowerCase())
+            );
+
+            if(filtered.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-8 text-slate-500">কোনো জরুরি যোগাযোগ নম্বর পাওয়া যায়নি।</div>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-start gap-4 relative group";
+                
+                let editBtns = isAuth ? `
+                    <div class="absolute top-2 right-2 flex gap-1.5 bg-white/80 backdrop-blur px-2 py-1 rounded-md shadow-sm">
+                        <button onclick="openContactForm(${item.id})" class="text-xs text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteContact(${item.id})" class="text-xs text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                ` : '';
+
+                card.innerHTML = `
+                    ${editBtns}
+                    <div class="w-12 h-12 rounded-full bg-brand-50 text-brand-700 flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid ${item.icon}" aria-hidden="true"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">${item.category}</span>
+                        <h3 class="font-bold text-slate-800 text-base leading-tight">${item.title}</h3>
+                        <p class="text-sm text-slate-600 mt-1">${item.person}</p>
+                        <div class="mt-3 flex items-center justify-between bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            <span class="font-mono text-sm font-bold text-slate-700">${item.phone}</span>
+                            <button onclick="copyToClipboard('${item.phone}')" class="text-xs bg-white text-brand-700 border border-slate-200 px-2.5 py-1 rounded hover:bg-brand-50 transition" title="নম্বর কপি করুন">
+                                <i class="fa-regular fa-copy" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function openContactForm(id = null) {
+            document.getElementById('contact-id').value = id || '';
+            const modalTitle = document.getElementById('contact-form-title');
+            if(id) {
+                modalTitle.innerText = "সেবা সম্পাদনা করুন";
+                const contacts = getStoredData('village_contacts', initialContacts);
+                const item = contacts.find(c => c.id === id);
+                if(item) {
+                    document.getElementById('form-contact-title').value = item.title;
+                    document.getElementById('form-contact-category').value = item.category;
+                    document.getElementById('form-contact-icon').value = item.icon;
+                    document.getElementById('form-contact-person').value = item.person;
+                    document.getElementById('form-contact-phone').value = item.phone;
+                }
+            } else {
+                modalTitle.innerText = "নতুন সেবা যোগ করুন";
+                document.getElementById('form-contact-title').value = '';
+                document.getElementById('form-contact-category').value = '';
+                document.getElementById('form-contact-person').value = '';
+                document.getElementById('form-contact-phone').value = '';
+            }
+            openModal('contact-form-modal');
+        }
+
+        function saveContact(e) {
+            e.preventDefault();
+            let contacts = getStoredData('village_contacts', initialContacts);
+            const id = document.getElementById('contact-id').value;
+
+            const newItem = {
+                id: id ? parseInt(id) : Date.now(),
+                title: document.getElementById('form-contact-title').value,
+                category: document.getElementById('form-contact-category').value,
+                icon: document.getElementById('form-contact-icon').value,
+                person: document.getElementById('form-contact-person').value,
+                phone: document.getElementById('form-contact-phone').value
+            };
+
+            if(id) {
+                const index = contacts.findIndex(c => c.id === parseInt(id));
+                if(index !== -1) contacts[index] = newItem;
+            } else {
+                contacts.unshift(newItem);
+            }
+            setStoredData('village_contacts', contacts);
+            closeModal('contact-form-modal');
+            renderContacts(document.getElementById('contact-search').value);
+        }
+
+        function deleteContact(id) {
+            if(confirm('আপনি কি নিশ্চিত যে এই যোগাযোগ বিবরণটি মুছে ফেলতে চান?')) {
+                let contacts = getStoredData('village_contacts', initialContacts);
+                contacts = contacts.filter(c => c.id !== id);
+                setStoredData('village_contacts', contacts);
+                renderContacts(document.getElementById('contact-search').value);
+            }
+        }
+
+        // Dynamic Market Operations
+        function renderMarketTable() {
+            const tbody = document.getElementById('market-table-body');
+            tbody.innerHTML = '';
+            const market = getStoredData('village_market', initialMarket);
+            const isAuth = isUserAuthorized();
+
+            // Show/Hide Admin column header
+            const adminCols = document.querySelectorAll('.admin-action-col');
+            adminCols.forEach(col => isAuth ? col.classList.remove('hidden') : col.classList.add('hidden'));
+
+            market.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = "hover:bg-slate-50 transition";
+                let badge = '';
+                if(item.status === 'up') {
+                    badge = `<span class="inline-flex items-center text-xs text-red-600 bg-red-50 font-medium px-2 py-0.5 rounded"><i class="fa-solid fa-arrow-up mr-1" aria-hidden="true"></i>${item.change}</span>`;
+                } else if(item.status === 'down') {
+                    badge = `<span class="inline-flex items-center text-xs text-emerald-600 bg-emerald-50 font-medium px-2 py-0.5 rounded"><i class="fa-solid fa-arrow-down mr-1" aria-hidden="true"></i>${item.change}</span>`;
+                } else {
+                    badge = `<span class="inline-flex items-center text-xs text-slate-600 bg-slate-100 font-medium px-2 py-0.5 rounded">${item.change}</span>`;
+                }
+
+                let editBtns = isAuth ? `
+                    <td class="p-4 text-right space-x-1">
+                        <button onclick="openMarketForm(${item.id})" class="text-xs text-blue-600 hover:text-blue-800 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteMarketItem(${item.id})" class="text-xs text-red-600 hover:text-red-800 p-1"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                ` : '';
+
+                row.innerHTML = `
+                    <td class="p-4 font-semibold text-slate-800">${item.name}</td>
+                    <td class="p-4 text-slate-600">${item.unit}</td>
+                    <td class="p-4 font-medium text-slate-700">${item.wholesale}</td>
+                    <td class="p-4 font-bold text-brand-900">${item.retail}</td>
+                    <td class="p-4">${badge}</td>
+                    ${editBtns}
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function openMarketForm(id = null) {
+            document.getElementById('market-id').value = id || '';
+            const modalTitle = document.getElementById('market-form-title');
+            if(id) {
+                modalTitle.innerText = "পণ্য দরদাম সম্পাদনা";
+                const market = getStoredData('village_market', initialMarket);
+                const item = market.find(m => m.id === id);
+                if(item) {
+                    document.getElementById('form-market-name').value = item.name;
+                    document.getElementById('form-market-unit').value = item.unit;
+                    document.getElementById('form-market-wholesale').value = item.wholesale;
+                    document.getElementById('form-market-retail').value = item.retail;
+                    document.getElementById('form-market-status').value = item.status;
+                    document.getElementById('form-market-change').value = item.change;
+                }
+            } else {
+                modalTitle.innerText = "নতুন বাজার পণ্য যোগ করুন";
+                document.getElementById('form-market-name').value = '';
+                document.getElementById('form-market-unit').value = '';
+                document.getElementById('form-market-wholesale').value = '';
+                document.getElementById('form-market-retail').value = '';
+                document.getElementById('form-market-change').value = '';
+            }
+            openModal('market-form-modal');
+        }
+
+        function saveMarketItem(e) {
+            e.preventDefault();
+            let market = getStoredData('village_market', initialMarket);
+            const id = document.getElementById('market-id').value;
+
+            const newItem = {
+                id: id ? parseInt(id) : Date.now(),
+                name: document.getElementById('form-market-name').value,
+                unit: document.getElementById('form-market-unit').value,
+                wholesale: document.getElementById('form-market-wholesale').value,
+                retail: document.getElementById('form-market-retail').value,
+                status: document.getElementById('form-market-status').value,
+                change: document.getElementById('form-market-change').value
+            };
+
+            if(id) {
+                const index = market.findIndex(m => m.id === parseInt(id));
+                if(index !== -1) market[index] = newItem;
+            } else {
+                market.unshift(newItem);
+            }
+            setStoredData('village_market', market);
+            closeModal('market-form-modal');
+            renderMarketTable();
+        }
+
+        function deleteMarketItem(id) {
+            if(confirm('আপনি কি নিশ্চিত যে এই পণ্যটি তালিকা থেকে মুছে ফেলতে চান?')) {
+                let market = getStoredData('village_market', initialMarket);
+                market = market.filter(m => m.id !== id);
+                setStoredData('village_market', market);
+                renderMarketTable();
+            }
+        }
+
+        // Notice Detail Modal Logic
+        function openNoticeModal(id) {
+            const notices = getStoredData('village_notices', initialNotices);
+            const notice = notices.find(n => n.id === id);
+            if(!notice) return;
+            const modalContent = document.getElementById('modal-content');
+            modalContent.innerHTML = `
+                <span class="inline-block bg-brand-100 text-brand-800 text-xs font-semibold px-2.5 py-1 rounded-md mb-2">${notice.categoryBn}</span>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">${notice.title}</h3>
+                <p class="text-xs text-slate-400 mb-4"><i class="fa-regular fa-calendar mr-1" aria-hidden="true"></i>প্রকাশের তারিখ: ${notice.date}</p>
+                <div class="text-slate-700 text-sm leading-relaxed border-t border-slate-100 pt-3">
+                    ${notice.details}
+                </div>
+                <div class="mt-6 text-right">
+                    <button onclick="closeModal('notice-modal')" class="bg-brand-700 text-white text-sm px-4 py-2 rounded-lg hover:bg-brand-800 transition">বন্ধ করুন</button>
+                </div>
+            `;
+            openModal('notice-modal');
+        }
+
+        // Modal Helpers
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if(modal) { modal.classList.remove('hidden'); modal.classList.add('flex'); }
+        }
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if(modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+        }
+        function switchAuthModal(type) {
+            closeModal('login-modal');
+            closeModal('register-modal');
+            if(type === 'login') openModal('login-modal');
+            if(type === 'register') openModal('register-modal');
+        }
+
+        // Copy Phone Helper
+        async function copyToClipboard(text) {
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(text);
+                } else {
+                    const input = document.createElement('input');
+                    input.value = text;
+                    document.body.appendChild(input);
+                    input.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(input);
+                }
+                const alertBox = document.createElement('div');
+                alertBox.className = "fixed bottom-5 right-5 bg-slate-900 text-white text-sm px-4 py-3 rounded-xl shadow-lg z-50 flex items-center gap-2 animate-fade-in";
+                alertBox.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400" aria-hidden="true"></i> নম্বরটি কপি করা হয়েছে: ${text}`;
+                document.body.appendChild(alertBox);
+                setTimeout(() => { alertBox.remove(); }, 2500);
+            } catch (err) {
+                console.error('কপি করতে সমস্যা হয়েছে:', err);
+            }
+        }
+
+        // Form Submit Handler (Saves Messages to LocalStorage)
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const newMessage = {
+                id: Date.now(),
+                name: document.getElementById('user-name').value,
+                phone: document.getElementById('user-phone').value,
+                location: document.getElementById('user-location').value,
+                subject: document.getElementById('user-subject').value,
+                message: document.getElementById('user-message').value,
+                date: new Date().toLocaleDateString('bn-BD')
+            };
+
+            let messages = getStoredData('village_messages', []);
+            messages.unshift(newMessage);
+            setStoredData('village_messages', messages);
+
+            const alert = document.getElementById('form-alert');
+            alert.className = "mt-4 p-4 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-800 border border-emerald-200 animate-fade-in";
+            alert.innerHTML = `<i class="fa-solid fa-check-circle mr-1" aria-hidden="true"></i> ধন্যবাদ! আপনার প্রস্তাবনা/বার্তা সফলভাবে পাঠানো হয়েছে। আমরা শীঘ্রই যোগাযোগ করবো।`;
+            alert.classList.remove('hidden');
+            e.target.reset();
+            
+            // Refresh Admin Badges
+            renderAuthBar();
+
+            setTimeout(() => { alert.classList.add('hidden'); }, 5000);
+        }
+
+        // Event Listeners Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            initAdminUser();
+            renderAuthBar();
+            fetchWeatherData();
+
+            // Notice Tab Filtering
+            const noticeTabs = document.getElementById('notice-tabs');
+            noticeTabs.addEventListener('click', (e) => {
+                const targetBtn = e.target.closest('.notice-tab');
+                if(!targetBtn) return;
+                currentFilter = targetBtn.getAttribute('data-category');
+                document.querySelectorAll('.notice-tab').forEach(btn => {
+                    btn.className = "notice-tab bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition";
+                });
+                targetBtn.className = "notice-tab active-tab bg-brand-700 text-white px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition";
+                renderNotices(currentFilter, document.getElementById('notice-search').value);
+            });
+
+            // Search Listeners
+            document.getElementById('notice-search').addEventListener('input', (e) => {
+                renderNotices(currentFilter, e.target.value);
+            });
+            document.getElementById('contact-search').addEventListener('input', (e) => {
+                renderContacts(e.target.value);
+            });
+
+            // Mobile Menu Toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuBtn.addEventListener('click', () => {
+                const isHidden = mobileMenu.classList.toggle('hidden');
+                mobileMenuBtn.setAttribute('aria-expanded', !isHidden);
+            });
+            document.querySelectorAll('.mobile-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
