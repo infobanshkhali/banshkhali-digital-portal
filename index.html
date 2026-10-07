@@ -643,7 +643,7 @@
             { id: 2, title: 'জরুরি অ্যাম্বুলেন্স সেবা', category: 'পরিবহন', icon: 'fa-truck-medical', phone: '০১৯১১-২২ ৩৩৪৪', person: 'চালক: মোঃ কালাম' },
             { id: 3, title: 'গ্রাম পুলিশ ও নৈশ প্রহরী', category: 'নিরাপত্তা', icon: 'fa-shield-halved', phone: '০১৮১২-৩৪৫৬৭৮', person: 'মোঃ রহমত মিঞা' },
             { id: 4, title: 'পল্লী বিদ্যুৎ অভিযোগ কেন্দ্র', category: 'বিদ্যুৎ', icon: 'fa-bolt text-amber-500', phone: '০১৬৭৮-৯৯০০১১', person: 'উপকেন্দ্র বাঁশখালী' },
-            { id: 5, title: 'ব্লক কৃষি কর্মকর্তা', category: 'কৃষি পরামর্শ', icon: 'fa-wheat-awn text-emerald-600', phone: '০১৫৫৫-৬৭৭৮৮', person: 'কৃষিবিদ আব্দুল হাদি' },
+            { id: 5, title: 'ব্লক কৃষি কর্মকর্তা', category: 'কৃষি পরামর্শ', icon: 'fa-wheat-awn text-emerald-600', phone: '০১৫৫৫-৬৭৮৮', person: 'কৃষিবিদ আব্দুল হাদি' },
             { id: 6, title: 'ইউপি চেয়ারম্যান কার্যালয়', category: 'প্রশাসন', icon: 'fa-landmark text-blue-600', phone: '০১৭১১-৯৯৮৮৭৭', person: 'চেয়ারম্যান মহোদয়' }
         ];
 
@@ -702,7 +702,7 @@
                 });
                 renderAdminUsers();
                 renderAuthBar();
-            });
+            }, (err) => { console.error("Firebase Read Error:", err); });
 
             // 2. Listen Messages Collection
             onSnapshot(collection(window.db, "messages"), (snapshot) => {
@@ -712,7 +712,7 @@
                 });
                 renderAdminMessages();
                 renderAuthBar();
-            });
+            }, (err) => { console.error("Firebase Read Error:", err); });
         }
 
         // Render Auth Bar & Dynamic Badges
@@ -779,6 +779,12 @@
             const password = document.getElementById('reg-password').value;
             const msg = document.getElementById('reg-msg');
 
+            if (!window.db) {
+                msg.className = "mt-3 text-xs text-center font-medium text-red-600";
+                msg.innerText = "ডাটাবেস কানেক্ট করা সম্ভব হয়নি! দয়া করে ফায়ারবেস কনফিগারেশন চেক করুন।";
+                return;
+            }
+
             btn.disabled = true;
             btn.innerText = "জমা দেওয়া হচ্ছে...";
 
@@ -807,7 +813,7 @@
                 e.target.reset();
             } catch (err) {
                 msg.className = "mt-3 text-xs text-center font-medium text-red-600";
-                msg.innerText = "ত্রুটি: " + err.message;
+                msg.innerText = "ত্রুটি: " + (err.message.includes('permission-denied') ? "ফায়ারবেস ডাটাবেস রুলস ব্লক করা রয়েছে (Security Rules problem)" : err.message);
             } finally {
                 btn.disabled = false;
                 btn.innerText = "রেজিস্ট্রেশন জমা দিন";
@@ -1021,6 +1027,15 @@
         async function handleFormSubmit(e) {
             e.preventDefault();
             const btn = document.getElementById('msg-submit-btn');
+            const alertBox = document.getElementById('form-alert');
+
+            if (!window.db) {
+                alertBox.className = "mt-4 p-4 rounded-xl text-sm font-medium bg-red-100 text-red-800 border border-red-200 animate-fade-in";
+                alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> ডাটাবেস কানেকশন ব্যর্থ হয়েছে। দয়া করে পেজ রিফ্রেশ দিন।`;
+                alertBox.classList.remove('hidden');
+                return;
+            }
+
             btn.disabled = true;
             btn.innerText = "বার্তা পাঠানো হচ্ছে...";
 
@@ -1037,7 +1052,6 @@
             try {
                 await window.addDoc(window.collection(window.db, "messages"), newMessage);
 
-                const alertBox = document.getElementById('form-alert');
                 alertBox.className = "mt-4 p-4 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-800 border border-emerald-200 animate-fade-in";
                 alertBox.innerHTML = `<i class="fa-solid fa-check-circle mr-1" aria-hidden="true"></i> ধন্যবাদ! আপনার বার্তাটি ক্লাউড ডাটাবেসে সফলভাবে জমা হয়েছে।`;
                 alertBox.classList.remove('hidden');
@@ -1045,7 +1059,9 @@
 
                 setTimeout(() => { alertBox.classList.add('hidden'); }, 5000);
             } catch (err) {
-                alert("বার্তা পাঠাতে ত্রুটি হয়েছে: " + err.message);
+                alertBox.className = "mt-4 p-4 rounded-xl text-sm font-medium bg-red-100 text-red-800 border border-red-200 animate-fade-in";
+                alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> বার্তা পাঠাতে ত্রুটি হয়েছে: ` + (err.message.includes('permission-denied') ? "ফায়ারবেস ডাটাবেস রুলস ব্লক করা রয়েছে।" : err.message);
+                alertBox.classList.remove('hidden');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = `<i class="fa-solid fa-paper-plane" aria-hidden="true"></i> বার্তা পাঠান`;
@@ -1525,7 +1541,7 @@
             getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, query, where 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // আপনার ফায়ারবেস কনফিগারেশন
+        // ফায়ারবেস কনফিগারেশন
         const firebaseConfig = {
             apiKey: "AIzaSyC09_PVmO6iP2ADoyD00Y_09gtdMkgkzhw",
             authDomain: "banshkhali-portal.firebaseapp.com",
@@ -1536,29 +1552,32 @@
             measurementId: "G-0R1WK87RDZ"
         };
 
-        // Initialize Firebase & Firestore
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        try {
+            // Initialize Firebase & Firestore
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
 
-        // Global Scope-এ ফায়ারবেস ফাংশন যুক্ত করা
-        window.db = db;
-        window.collection = collection;
-        window.addDoc = addDoc;
-        window.getDocs = getDocs;
-        window.doc = doc;
-        window.updateDoc = updateDoc;
-        window.deleteDoc = deleteDoc;
-        window.onSnapshot = onSnapshot;
-        window.query = query;
-        window.where = where;
+            // Global Scope-এ ফায়ারবেস ফাংশন যুক্ত করা
+            window.db = db;
+            window.collection = collection;
+            window.addDoc = addDoc;
+            window.getDocs = getDocs;
+            window.doc = doc;
+            window.updateDoc = updateDoc;
+            window.deleteDoc = deleteDoc;
+            window.onSnapshot = onSnapshot;
+            window.query = query;
+            window.where = where;
 
-        // পেজ লোড হলে ডাটাবেসের সাথে কানেক্ট করা
-        window.addEventListener('DOMContentLoaded', () => {
+            // ডাটাবেস কানেকশন শুরু
             if (typeof initAdminUser === "function") initAdminUser();
             if (typeof renderAuthBar === "function") renderAuthBar();
             if (typeof fetchWeatherData === "function") fetchWeatherData();
             if (typeof listenToRealtimeData === "function") listenToRealtimeData();
-        });
+
+        } catch (error) {
+            console.error("Firebase connection error:", error);
+        }
     </script>
 </body>
 </html>
