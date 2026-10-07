@@ -273,7 +273,7 @@
         </div>
     </section>
 
-    <!-- Contact Form -->
+    <!-- Contact Form (Firebase Integrated) -->
     <section id="contact" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -338,7 +338,7 @@
                             <label for="user-message" class="block text-sm font-medium text-slate-700 mb-1">বার্তা বা বিবরণ *</label>
                             <textarea id="user-message" rows="4" required placeholder="আপনার বিস্তারিত মন্তব্য বা অনুদানের ইচ্ছা লিখুন..." class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm"></textarea>
                         </div>
-                        <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-3 rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                        <button type="submit" id="msg-submit-btn" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-3 rounded-xl transition shadow-md flex items-center justify-center gap-2">
                             <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> বার্তা পাঠান
                         </button>
                     </form>
@@ -509,7 +509,7 @@
                     <label class="block text-sm font-medium text-slate-700 mb-1">পাসওয়ার্ড</label>
                     <input type="password" id="login-password" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
                 </div>
-                <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-xl transition">লগইন</button>
+                <button type="submit" id="login-submit-btn" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-xl transition">লগইন</button>
             </form>
             <div id="login-msg" class="mt-3 text-xs text-center font-medium"></div>
             <p class="mt-4 text-xs text-center text-slate-600">অ্যাকোউন্ট নেই? <button onclick="switchAuthModal('register')" class="text-brand-700 font-bold hover:underline">নতুন অ্যাকাউন্ট খুলুন</button></p>
@@ -537,28 +537,28 @@
                     <label class="block text-sm font-medium text-slate-700 mb-1">পাসওয়ার্ড</label>
                     <input type="password" id="reg-password" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
                 </div>
-                <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-xl transition">রেজিস্ট্রেশন জমা দিন</button>
+                <button type="submit" id="reg-submit-btn" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-xl transition">রেজিস্ট্রেশন জমা দিন</button>
             </form>
             <div id="reg-msg" class="mt-3 text-xs text-center font-medium"></div>
             <p class="mt-4 text-xs text-center text-slate-600">আগে থেকেই অ্যাকাউন্ট আছে? <button onclick="switchAuthModal('login')" class="text-brand-700 font-bold hover:underline">লগইন করুন</button></p>
         </div>
     </div>
 
-    <!-- Admin Panel Modal (Updated with Messages Tab) -->
+    <!-- Admin Panel Modal -->
     <div id="admin-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="bg-white rounded-2xl max-w-4xl w-full p-6 shadow-2xl relative animate-fade-in max-h-[90vh] flex flex-col">
             <button onclick="closeModal('admin-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             <h3 class="text-2xl font-bold text-brand-900 mb-1 flex items-center gap-2">
-                <i class="fa-solid fa-user-shield text-amber-500"></i> এডমিন কন্ট্রোল প্যানেল
+                <i class="fa-solid fa-user-shield text-amber-500"></i> এডমিন কন্ট্রোল প্যানেল (Firebase Live)
             </h3>
             <p class="text-sm text-slate-500 mb-4">ইউজার অ্যাকাউন্ট অনুমোদন ও ব্যবহারকারীদের পাঠানো বার্তা পরিচালনা করুন</p>
 
             <!-- Admin Nav Tabs -->
             <div class="flex border-b border-slate-200 mb-4 gap-2">
                 <button id="admin-tab-users" onclick="switchAdminTab('users')" class="px-4 py-2 font-bold border-b-2 border-brand-700 text-brand-700 text-sm flex items-center gap-1.5 transition">
-                    <i class="fa-solid fa-users"></i> ইউজার অনুমোদন
+                    <i class="fa-solid fa-users"></i> ইউজার অনুমোদন <span id="admin-user-badge" class="hidden bg-amber-500 text-slate-900 text-[10px] font-bold px-1.5 py-0.5 rounded-full"></span>
                 </button>
                 <button id="admin-tab-messages" onclick="switchAdminTab('messages')" class="px-4 py-2 font-bold text-slate-500 border-b-2 border-transparent hover:text-slate-700 text-sm flex items-center gap-1.5 transition">
                     <i class="fa-solid fa-envelope"></i> বার্তা/মতামত তালিকা <span id="admin-msg-badge" class="hidden bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full"></span>
@@ -656,9 +656,11 @@
             { id: 6, name: 'কাঁচামরিচ', unit: 'কেজি', wholesale: '১১০ টাকা', retail: '১৩০ টাকা', status: 'down', change: '-২০ টাকা' }
         ];
 
-        // Local Storage Handlers
-        function getUsers() { return JSON.parse(localStorage.getItem('village_users') || '[]'); }
-        function setUsers(users) { localStorage.setItem('village_users', JSON.stringify(users)); }
+        // Global Cache Arrays
+        let firebaseUsers = [];
+        let firebaseMessages = [];
+
+        // Current Logged User Helper
         function getCurrentUser() { return JSON.parse(localStorage.getItem('current_logged_user') || 'null'); }
         function setCurrentUser(user) { localStorage.setItem('current_logged_user', JSON.stringify(user)); }
 
@@ -681,17 +683,39 @@
             return user && (user.role === 'admin' || user.status === 'approved');
         }
 
-        // Initialize Admin Account in Storage
         function initAdminUser() {
-            let users = getUsers();
-            const adminExist = users.find(u => u.email === ADMIN_EMAIL);
-            if (!adminExist) {
-                users.push({ name: 'এডমিন (Dipranjan)', email: ADMIN_EMAIL, password: ADMIN_PASS, status: 'approved', role: 'admin' });
-                setUsers(users);
+            const currentUser = getCurrentUser();
+            if (!currentUser && localStorage.getItem('is_admin_logged') === 'true') {
+                setCurrentUser({ name: 'এডমিন (Dipranjan)', email: ADMIN_EMAIL, status: 'approved', role: 'admin' });
             }
         }
 
-        // Auth Bar Render & Admin Top Navigation Display Logic
+        // Realtime Listener for Firebase Collections
+        function listenToRealtimeData() {
+            if (!window.db) return;
+
+            // 1. Listen Users Collection
+            onSnapshot(collection(window.db, "users"), (snapshot) => {
+                firebaseUsers = [];
+                snapshot.forEach(docSnap => {
+                    firebaseUsers.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                renderAdminUsers();
+                renderAuthBar();
+            });
+
+            // 2. Listen Messages Collection
+            onSnapshot(collection(window.db, "messages"), (snapshot) => {
+                firebaseMessages = [];
+                snapshot.forEach(docSnap => {
+                    firebaseMessages.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                renderAdminMessages();
+                renderAuthBar();
+            });
+        }
+
+        // Render Auth Bar & Dynamic Badges
         function renderAuthBar() {
             const container = document.getElementById('auth-bar-container');
             const adminNavContainer = document.getElementById('admin-nav-item');
@@ -701,24 +725,19 @@
             if (currentUser) {
                 let adminBtn = '';
                 if (currentUser.role === 'admin') {
-                    // Count Pending Users & Messages for Notification Badge
-                    const users = getUsers();
-                    const pendingCount = users.filter(u => u.status === 'pending' && u.role !== 'admin').length;
-                    const messages = getStoredData('village_messages', []);
-                    const totalBadgeCount = pendingCount + messages.length;
+                    const pendingUsers = firebaseUsers.filter(u => u.status === 'pending' && u.role !== 'admin').length;
+                    const totalBadge = pendingUsers + firebaseMessages.length;
+                    const badgeHtml = totalBadge > 0 ? `<span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full ml-1">${totalBadge}</span>` : '';
 
-                    const badgeHtml = totalBadgeCount > 0 ? `<span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full ml-1">${totalBadgeCount}</span>` : '';
-
-                    adminBtn = `<button onclick="openModal('admin-modal'); renderAdminPanel();" class="bg-amber-500 text-slate-900 px-2 py-0.5 rounded font-bold hover:bg-amber-400 transition inline-flex items-center"><i class="fa-solid fa-user-gear mr-1"></i> এডমিন ড্যাশবোর্ড ${badgeHtml}</button>`;
+                    adminBtn = `<button onclick="openModal('admin-modal');" class="bg-amber-500 text-slate-900 px-2 py-0.5 rounded font-bold hover:bg-amber-400 transition inline-flex items-center"><i class="fa-solid fa-user-gear mr-1"></i> এডমিন ড্যাশবোর্ড ${badgeHtml}</button>`;
                     
-                    // Header Navbar Link (Visible exclusively to Admin)
                     adminNavContainer.innerHTML = `
-                        <button onclick="openModal('admin-modal'); renderAdminPanel();" class="px-3 py-2 rounded-md bg-amber-100 text-amber-900 font-bold hover:bg-amber-200 transition flex items-center gap-1">
+                        <button onclick="openModal('admin-modal');" class="px-3 py-2 rounded-md bg-amber-100 text-amber-900 font-bold hover:bg-amber-200 transition flex items-center gap-1">
                             <i class="fa-solid fa-user-shield text-amber-600"></i> এডমিন প্যানেল ${badgeHtml}
                         </button>
                     `;
                     mobileAdminNavContainer.innerHTML = `
-                        <button onclick="openModal('admin-modal'); renderAdminPanel();" class="mobile-link w-full text-left px-3 py-2 rounded-md bg-amber-100 text-amber-900 font-bold hover:bg-amber-200 transition flex items-center justify-between">
+                        <button onclick="openModal('admin-modal');" class="mobile-link w-full text-left px-3 py-2 rounded-md bg-amber-100 text-amber-900 font-bold hover:bg-amber-200 transition flex items-center justify-between">
                             <span><i class="fa-solid fa-user-shield text-amber-600 mr-1"></i> এডমিন প্যানেল</span> ${badgeHtml}
                         </button>
                     `;
@@ -741,48 +760,82 @@
                 `;
             }
 
-            // Render Add Buttons if Authorized
             const isAuth = isUserAuthorized();
             document.getElementById('add-notice-btn-container').innerHTML = isAuth ? `<button onclick="openNoticeForm()" class="bg-emerald-700 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-emerald-800 transition"><i class="fa-solid fa-plus mr-1"></i> নতুন নোটিশ</button>` : '';
             document.getElementById('add-contact-btn-container').innerHTML = isAuth ? `<button onclick="openContactForm()" class="bg-emerald-700 text-white px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-800 transition"><i class="fa-solid fa-plus mr-1"></i> নতুন সেবা</button>` : '';
             document.getElementById('add-market-btn-container').innerHTML = isAuth ? `<button onclick="openMarketForm()" class="bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-emerald-800 transition"><i class="fa-solid fa-plus mr-1"></i> নতুন পণ্য</button>` : '';
 
-            // Re-render components to show/hide edit-delete actions
             renderNotices(currentFilter, document.getElementById('notice-search').value);
             renderContacts(document.getElementById('contact-search').value);
             renderMarketTable();
         }
 
-        // Auth Operations
-        function handleRegister(e) {
+        // Auth Operations (Firebase Firestore Integrated)
+        async function handleRegister(e) {
             e.preventDefault();
+            const btn = document.getElementById('reg-submit-btn');
             const name = document.getElementById('reg-name').value.trim();
             const email = document.getElementById('reg-email').value.trim().toLowerCase();
             const password = document.getElementById('reg-password').value;
             const msg = document.getElementById('reg-msg');
-            let users = getUsers();
-            
-            if (users.find(u => u.email === email)) {
+
+            btn.disabled = true;
+            btn.innerText = "জমা দেওয়া হচ্ছে...";
+
+            try {
+                // Check duplicate email
+                const exist = firebaseUsers.find(u => u.email === email);
+                if (exist) {
+                    msg.className = "mt-3 text-xs text-center font-medium text-red-600";
+                    msg.innerText = "এই ইমেইল দিয়ে ইতঃপূর্বে অ্যাকাউন্ট খোলা হয়েছে!";
+                    btn.disabled = false;
+                    btn.innerText = "রেজিস্ট্রেশন জমা দিন";
+                    return;
+                }
+
+                await window.addDoc(window.collection(window.db, "users"), {
+                    name,
+                    email,
+                    password,
+                    status: 'pending',
+                    role: 'user',
+                    createdAt: new Date().toISOString()
+                });
+
+                msg.className = "mt-3 text-xs text-center font-medium text-emerald-600";
+                msg.innerText = "রেজিস্ট্রেশন সফল হয়েছে! এডমিন অনুমোদনের পর আপনি লগইন করতে পারবেন।";
+                e.target.reset();
+            } catch (err) {
                 msg.className = "mt-3 text-xs text-center font-medium text-red-600";
-                msg.innerText = "এই ইমেইল দিয়ে ইতঃপূর্বে অ্যাকাউন্ট খোলা হয়েছে!";
-                return;
+                msg.innerText = "ত্রুটি: " + err.message;
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "রেজিস্ট্রেশন জমা দিন";
             }
-            users.push({ name, email, password, status: 'pending', role: 'user' });
-            setUsers(users);
-            msg.className = "mt-3 text-xs text-center font-medium text-emerald-600";
-            msg.innerText = "রেজিস্ট্রেশন সফল হয়েছে! এডমিন অনুমোদনের পর আপনি লগইন করতে পারবেন।";
-            e.target.reset();
-            renderAuthBar();
         }
 
-        function handleLogin(e) {
+        async function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('login-email').value.trim().toLowerCase();
             const password = document.getElementById('login-password').value;
             const msg = document.getElementById('login-msg');
-            let users = getUsers();
-            const user = users.find(u => u.email === email && u.password === password);
-            
+
+            // Hardcoded Admin Check
+            if (email === ADMIN_EMAIL && password === ADMIN_PASS) {
+                const adminObj = { name: 'এডমিন (Dipranjan)', email: ADMIN_EMAIL, status: 'approved', role: 'admin' };
+                setCurrentUser(adminObj);
+                localStorage.setItem('is_admin_logged', 'true');
+                msg.className = "mt-3 text-xs text-center font-medium text-emerald-600";
+                msg.innerText = "এডমিন লগইন সফল হয়েছে!";
+                setTimeout(() => {
+                    closeModal('login-modal');
+                    renderAuthBar();
+                }, 800);
+                return;
+            }
+
+            // Normal User Firebase Check
+            const user = firebaseUsers.find(u => u.email === email && u.password === password);
             if (!user) {
                 msg.className = "mt-3 text-xs text-center font-medium text-red-600";
                 msg.innerText = "ভুল ইমেইল অথবা পাসওয়ার্ড!";
@@ -790,14 +843,15 @@
             }
             if (user.status === 'pending') {
                 msg.className = "mt-3 text-xs text-center font-medium text-amber-600";
-                msg.innerText = "আপনার অ্যাকাউন্টটি এখনো এডমিন দ্বারা অনুমোদিত (Approve) হয়নি। দয়া করে অপেক্ষা করুন।";
+                msg.innerText = "আপনার অ্যাকাউন্টটি এখনো এডমিন দ্বারা অনুমোদিত (Approve) হয়নি।";
                 return;
             }
             if (user.status === 'rejected') {
                 msg.className = "mt-3 text-xs text-center font-medium text-red-600";
-                msg.innerText = "আপনার অ্যাকাউন্ট আবেদনের অনুরোধটি এডমিন কর্তৃক বাতিল (Rejected) করা হয়েছে!";
+                msg.innerText = "আপনার অ্যাকাউন্ট আবেদনের অনুরোধটি বাতিল (Rejected) করা হয়েছে!";
                 return;
             }
+
             setCurrentUser(user);
             msg.className = "mt-3 text-xs text-center font-medium text-emerald-600";
             msg.innerText = "লগইন সফল হয়েছে!";
@@ -809,15 +863,11 @@
 
         function handleLogout() {
             localStorage.removeItem('current_logged_user');
+            localStorage.removeItem('is_admin_logged');
             renderAuthBar();
         }
 
-        // Admin Panel Functions (Approve/Reject Logic & Messages View)
-        function renderAdminPanel() {
-            renderAdminUsers();
-            renderAdminMessages();
-        }
-
+        // Admin Panel Functions (Firebase Operations)
         function switchAdminTab(tab) {
             const usersTabBtn = document.getElementById('admin-tab-users');
             const messagesTabBtn = document.getElementById('admin-tab-messages');
@@ -839,13 +889,26 @@
 
         function renderAdminUsers() {
             const tbody = document.getElementById('admin-user-table');
-            const users = getUsers();
+            const userBadge = document.getElementById('admin-user-badge');
             tbody.innerHTML = '';
             
-            users.forEach((u, index) => {
-                if (u.role === 'admin') return;
+            const generalUsers = firebaseUsers.filter(u => u.role !== 'admin');
+            const pendingUsers = generalUsers.filter(u => u.status === 'pending');
+
+            if(pendingUsers.length > 0) {
+                userBadge.innerText = pendingUsers.length;
+                userBadge.classList.remove('hidden');
+            } else {
+                userBadge.classList.add('hidden');
+            }
+
+            if (generalUsers.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-slate-400">কোনো সাধারণ ইউজার বা পেন্ডিং অ্যাকাউন্ট পাওয়া যায়নি।</td></tr>`;
+                return;
+            }
+
+            generalUsers.forEach((u) => {
                 const tr = document.createElement('tr');
-                
                 let badge = '';
                 if(u.status === 'approved') {
                     badge = `<span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded font-semibold"><i class="fa-solid fa-circle-check mr-1"></i>Approved</span>`;
@@ -858,16 +921,16 @@
                 let actionBtns = '';
                 if(u.status === 'pending') {
                     actionBtns = `
-                        <button onclick="updateUserStatus(${index}, 'approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded transition mr-1" title="অনুমোদন দিন"><i class="fa-solid fa-check mr-1"></i>Approve</button>
-                        <button onclick="updateUserStatus(${index}, 'rejected')" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2.5 py-1 rounded transition mr-1" title="আবেদন বাতিল করুন"><i class="fa-solid fa-ban mr-1"></i>Reject</button>
+                        <button onclick="updateFirebaseUserStatus('${u.id}', 'approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded transition mr-1"><i class="fa-solid fa-check mr-1"></i>Approve</button>
+                        <button onclick="updateFirebaseUserStatus('${u.id}', 'rejected')" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2.5 py-1 rounded transition mr-1"><i class="fa-solid fa-ban mr-1"></i>Reject</button>
                     `;
                 } else if(u.status === 'approved') {
                     actionBtns = `
-                        <button onclick="updateUserStatus(${index}, 'rejected')" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2.5 py-1 rounded transition mr-1"><i class="fa-solid fa-ban mr-1"></i>Reject</button>
+                        <button onclick="updateFirebaseUserStatus('${u.id}', 'rejected')" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2.5 py-1 rounded transition mr-1"><i class="fa-solid fa-ban mr-1"></i>Reject</button>
                     `;
                 } else if(u.status === 'rejected') {
                     actionBtns = `
-                        <button onclick="updateUserStatus(${index}, 'approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded transition mr-1"><i class="fa-solid fa-check mr-1"></i>Approve</button>
+                        <button onclick="updateFirebaseUserStatus('${u.id}', 'approved')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded transition mr-1"><i class="fa-solid fa-check mr-1"></i>Approve</button>
                     `;
                 }
                 
@@ -877,35 +940,31 @@
                     <td class="p-3">${badge}</td>
                     <td class="p-3 text-right">
                         ${actionBtns}
-                        <button onclick="deleteUser(${index})" class="bg-red-100 hover:bg-red-200 text-red-700 text-xs px-2 py-1 rounded transition" title="ইউজার অ্যাকাউন্ট মুছে ফেলুন"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="deleteFirebaseUser('${u.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 text-xs px-2 py-1 rounded transition" title="মুছে ফেলুন"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
-            if (tbody.children.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-slate-400">কোনো সাধারণ ইউজার বা পেন্ডিং অ্যাকাউন্ট পাওয়া যায়নি।</td></tr>`;
-            }
         }
 
         function renderAdminMessages() {
             const container = document.getElementById('admin-messages-container');
-            const messages = getStoredData('village_messages', []);
             const badge = document.getElementById('admin-msg-badge');
 
-            if(messages.length > 0) {
-                badge.innerText = messages.length;
+            if(firebaseMessages.length > 0) {
+                badge.innerText = firebaseMessages.length;
                 badge.classList.remove('hidden');
             } else {
                 badge.classList.add('hidden');
             }
 
             container.innerHTML = '';
-            if(messages.length === 0) {
+            if(firebaseMessages.length === 0) {
                 container.innerHTML = `<div class="text-center py-8 text-slate-400">কোনো নতুন বার্তা বা মতামত জমা পড়েনি।</div>`;
                 return;
             }
 
-            messages.forEach((msg, idx) => {
+            firebaseMessages.forEach((msg) => {
                 const card = document.createElement('div');
                 card.className = "bg-slate-50 border border-slate-200 p-4 rounded-xl relative hover:shadow-sm transition";
                 card.innerHTML = `
@@ -916,7 +975,7 @@
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i>${msg.date}</span>
-                            <button onclick="deleteUserMessage(${idx})" class="text-red-500 hover:text-red-700 text-xs p-1" title="বার্তা মুছুন"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="deleteFirebaseMessage('${msg.id}')" class="text-red-500 hover:text-red-700 text-xs p-1" title="বার্তা মুছুন"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
                     <p class="text-slate-700 text-sm leading-relaxed mb-3 bg-white p-3 rounded-lg border border-slate-100">${msg.message}</p>
@@ -929,31 +988,67 @@
             });
         }
 
-        function deleteUserMessage(index) {
-            if(confirm('আপনি কি এই বার্তাটি মুছে ফেলতে চান?')) {
-                let messages = getStoredData('village_messages', []);
-                messages.splice(index, 1);
-                setStoredData('village_messages', messages);
-                renderAdminMessages();
-                renderAuthBar();
+        async function updateFirebaseUserStatus(docId, newStatus) {
+            try {
+                const userRef = window.doc(window.db, "users", docId);
+                await window.updateDoc(userRef, { status: newStatus });
+            } catch (err) {
+                alert("আপডেট করতে সমস্যা হয়েছে: " + err.message);
             }
         }
 
-        function updateUserStatus(index, status) {
-            let users = getUsers();
-            users[index].status = status;
-            setUsers(users);
-            renderAdminPanel();
-            renderAuthBar();
+        async function deleteFirebaseUser(docId) {
+            if(confirm('আপনি কি এই ইউজারটি মুছে ফেলতে চান?')) {
+                try {
+                    await window.deleteDoc(window.doc(window.db, "users", docId));
+                } catch (err) {
+                    alert("মুছতে সমস্যা হয়েছে: " + err.message);
+                }
+            }
         }
 
-        function deleteUser(index) {
-            if(confirm('আপনি কি সত্যিই এই ইউজারকে মুছে ফেলতে চান?')) {
-                let users = getUsers();
-                users.splice(index, 1);
-                setUsers(users);
-                renderAdminPanel();
-                renderAuthBar();
+        async function deleteFirebaseMessage(docId) {
+            if(confirm('আপনি কি এই বার্তাটি মুছে ফেলতে চান?')) {
+                try {
+                    await window.deleteDoc(window.doc(window.db, "messages", docId));
+                } catch (err) {
+                    alert("মুছতে সমস্যা হয়েছে: " + err.message);
+                }
+            }
+        }
+
+        // Contact Form Submit Handler (Saves to Firestore)
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            const btn = document.getElementById('msg-submit-btn');
+            btn.disabled = true;
+            btn.innerText = "বার্তা পাঠানো হচ্ছে...";
+
+            const newMessage = {
+                name: document.getElementById('user-name').value,
+                phone: document.getElementById('user-phone').value,
+                location: document.getElementById('user-location').value,
+                subject: document.getElementById('user-subject').value,
+                message: document.getElementById('user-message').value,
+                date: new Date().toLocaleDateString('bn-BD'),
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                await window.addDoc(window.collection(window.db, "messages"), newMessage);
+
+                const alertBox = document.getElementById('form-alert');
+                alertBox.className = "mt-4 p-4 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-800 border border-emerald-200 animate-fade-in";
+                alertBox.innerHTML = `<i class="fa-solid fa-check-circle mr-1" aria-hidden="true"></i> ধন্যবাদ! আপনার বার্তাটি ক্লাউড ডাটাবেসে সফলভাবে জমা হয়েছে।`;
+                alertBox.classList.remove('hidden');
+                e.target.reset();
+
+                setTimeout(() => { alertBox.classList.add('hidden'); }, 5000);
+            } catch (err) {
+                alert("বার্তা পাঠাতে ত্রুটি হয়েছে: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-paper-plane" aria-hidden="true"></i> বার্তা পাঠান`;
             }
         }
 
@@ -1230,7 +1325,6 @@
             const market = getStoredData('village_market', initialMarket);
             const isAuth = isUserAuthorized();
 
-            // Show/Hide Admin column header
             const adminCols = document.querySelectorAll('.admin-action-col');
             adminCols.forEach(col => isAuth ? col.classList.remove('hidden') : col.classList.add('hidden'));
 
@@ -1385,42 +1479,8 @@
             }
         }
 
-        // Form Submit Handler (Saves Messages to LocalStorage)
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            
-            const newMessage = {
-                id: Date.now(),
-                name: document.getElementById('user-name').value,
-                phone: document.getElementById('user-phone').value,
-                location: document.getElementById('user-location').value,
-                subject: document.getElementById('user-subject').value,
-                message: document.getElementById('user-message').value,
-                date: new Date().toLocaleDateString('bn-BD')
-            };
-
-            let messages = getStoredData('village_messages', []);
-            messages.unshift(newMessage);
-            setStoredData('village_messages', messages);
-
-            const alert = document.getElementById('form-alert');
-            alert.className = "mt-4 p-4 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-800 border border-emerald-200 animate-fade-in";
-            alert.innerHTML = `<i class="fa-solid fa-check-circle mr-1" aria-hidden="true"></i> ধন্যবাদ! আপনার প্রস্তাবনা/বার্তা সফলভাবে পাঠানো হয়েছে। আমরা শীঘ্রই যোগাযোগ করবো।`;
-            alert.classList.remove('hidden');
-            e.target.reset();
-            
-            // Refresh Admin Badges
-            renderAuthBar();
-
-            setTimeout(() => { alert.classList.add('hidden'); }, 5000);
-        }
-
         // Event Listeners Initialization
-        window.addEventListener('DOMContentLoaded', () => {
-            initAdminUser();
-            renderAuthBar();
-            fetchWeatherData();
-
+        window.addEventListener('load', () => {
             // Notice Tab Filtering
             const noticeTabs = document.getElementById('notice-tabs');
             noticeTabs.addEventListener('click', (e) => {
@@ -1455,6 +1515,49 @@
                     mobileMenuBtn.setAttribute('aria-expanded', 'false');
                 });
             });
+        });
+    </script>
+
+    <!-- Firebase & Application Initialization Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, query, where 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // আপনার ফায়ারবেস কনফিগারেশন
+        const firebaseConfig = {
+            apiKey: "AIzaSyC09_PVmO6iP2ADoyD00Y_09gtdMkgkzhw",
+            authDomain: "banshkhali-portal.firebaseapp.com",
+            projectId: "banshkhali-portal",
+            storageBucket: "banshkhali-portal.firebasestorage.app",
+            messagingSenderId: "686934765438",
+            appId: "1:686934765438:web:a981d9b22e129e9d7fd027",
+            measurementId: "G-0R1WK87RDZ"
+        };
+
+        // Initialize Firebase & Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Global Scope-এ ফায়ারবেস ফাংশন যুক্ত করা
+        window.db = db;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.getDocs = getDocs;
+        window.doc = doc;
+        window.updateDoc = updateDoc;
+        window.deleteDoc = deleteDoc;
+        window.onSnapshot = onSnapshot;
+        window.query = query;
+        window.where = where;
+
+        // পেজ লোড হলে ডাটাবেসের সাথে কানেক্ট করা
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof initAdminUser === "function") initAdminUser();
+            if (typeof renderAuthBar === "function") renderAuthBar();
+            if (typeof fetchWeatherData === "function") fetchWeatherData();
+            if (typeof listenToRealtimeData === "function") listenToRealtimeData();
         });
     </script>
 </body>
