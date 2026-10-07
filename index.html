@@ -167,7 +167,7 @@
                         <input type="text" id="notice-search" placeholder="নোটিশ খুঁজুন..." class="w-full sm:w-64 pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
                         <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400 text-sm" aria-hidden="true"></i>
                     </div>
-                    <!-- Add Notice Button (Visible to Authorized Users) -->
+                    <!-- Add Notice Button -->
                     <div id="add-notice-btn-container"></div>
                 </div>
             </div>
@@ -209,13 +209,12 @@
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
                 <div>
                     <div class="inline-flex items-center gap-2 text-xs font-semibold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full mb-2">
-                        <i class="fa-solid fa-arrows-rotate animate-spin text-emerald-600" aria-hidden="true"></i> দৈনিক আপডেটকৃত
+                        <i class="fa-solid fa-arrows-rotate animate-spin text-emerald-600" aria-hidden="true"></i> লাইভ ফায়ারবেস আপডেট
                     </div>
                     <h2 class="text-3xl font-bold text-brand-900">কৃষি বাজার ও পণ্যের দরদাম</h2>
-                    <p class="text-slate-600 mt-1">আমাদের স্থানীয় হাটের আজকের পাইকারি ও খুচরা মূল্য তালিকা</p>
+                    <p class="text-slate-600 mt-1">আমাদের স্থানীয় হাটের পাইকারি ও খুচরা মূল্য তালিকা</p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <div class="text-sm text-slate-500 italic">সর্বশেষ আপডেট: আজ সকাল ০৮:৩০ মিনিট</div>
                     <div id="add-market-btn-container"></div>
                 </div>
             </div>
@@ -395,7 +394,7 @@
                     <label class="block text-sm font-medium text-slate-700 mb-1">বিস্তারিত বিবরণ *</label>
                     <textarea id="form-notice-details" rows="3" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm"></textarea>
                 </div>
-                <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-xl transition">সংরক্ষণ করুন</button>
+                <button type="submit" id="notice-save-btn" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-xl transition">সংরক্ষণ করুন</button>
             </form>
         </div>
     </div>
@@ -438,7 +437,7 @@
                     <label class="block text-sm font-medium text-slate-700 mb-1">ফোন নম্বর *</label>
                     <input type="text" id="form-contact-phone" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
                 </div>
-                <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-xl transition">সংরক্ষণ করুন</button>
+                <button type="submit" id="contact-save-btn" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-xl transition">সংরক্ষণ করুন</button>
             </form>
         </div>
     </div>
@@ -486,7 +485,7 @@
                         <input type="text" id="form-market-change" placeholder="+৫০ টাকা / অপরিবর্তিত" required class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-xl transition">সংরক্ষণ করুন</button>
+                <button type="submit" id="market-save-btn" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-2.5 rounded-xl transition">সংরক্ষণ করুন</button>
             </form>
         </div>
     </div>
@@ -630,52 +629,16 @@
         const ADMIN_EMAIL = "freelancerdip25@gmail.com";
         const ADMIN_PASS = "Dip25@village";
 
-        // Initial Data Sets
-        const initialNotices = [
-            { id: 1, title: 'বিনামূল্যে চক্ষু ও ডায়াবেটিস ক্যাম্প', category: 'health', categoryBn: 'স্বাস্থ্য', date: '১০ অক্টোবর, ২০২৬', summary: 'আগামী শুক্রবার গ্রাম্য প্রাথমিক বিদ্যালয়ে বিশেষজ্ঞ ডাক্তার দ্বারা বিনামূল্যে চোখ পরীক্ষা...', details: 'গ্রামের সকল সাধারণ মানুষের জানানো যাচ্ছে যে, আগামী শুক্রবার সকাল ৯:০০ টা থেকে বিকেল ৪:০০ টা পর্যন্ত প্রাথমিক বিদ্যালয় মাঠে একটি ফ্রি স্বাস্থ্য ক্যাম্পের আয়োজন করা হয়েছে। অভিজ্ঞ ডাক্তারগণ উপস্থিত থাকবেন।' },
-            { id: 2, title: 'রবি শস্য ও গম বীজে সরকারি ৫০% ভর্তুকি', category: 'agriculture', categoryBn: 'কৃষি', date: '০৮ অক্টোবর, ২০২৬', summary: 'উপজেলা কৃষি অফিস থেকে নতুন সার ও উন্নত জাতের বীজের ওপর প্রণোদনা প্রদান করা হবে...', details: 'কৃষক ভাইদের জন্য সুখবর! ব্লক সুপারভাইজারের নিকট নাম নিবন্ধন করে ৫০% নামমাত্র মূল্যে গমের উন্নত বীজ এবং ডিএপি সার সংগ্রহ করুন। আবেদনের শেষ তারিখ ১৫ অক্টোবর।' },
-            { id: 3, title: 'মাধ্যমিক উপবৃত্তি ও স্কলারশিপ ফরম বিতরণ', category: 'education', categoryBn: 'শিক্ষা', date: '০৫ অক্টোবর, ২০২৬', summary: 'মেধাবী ও অসচ্ছল ছাত্র-ছাত্রীদের উপবৃত্তির আবেদনের শেষ তারিখ নির্ধারণ করা হয়েছে...', details: 'উচ্চ বিদ্যালয় থেকে ২০২৬ শিক্ষাবর্ষের সকল ৬ষ্ঠ থেকে ১০ম শ্রেণীর শিক্ষার্থীদের জন্য উপবৃত্তির আবেদন ফর্ম ছাড়া হয়েছে। শিক্ষার্থীগণ প্রধান শিক্ষকের কক্ষ থেকে ফরম সংগ্রহ করতে পারেন।' },
-            { id: 4, title: 'গ্রামের কেন্দ্রীয় মসজিদ সংস্কার সংক্রান্ত সাধারণ সভা', category: 'general', categoryBn: 'সাধারণ', date: '০২ অক্টোবর, ২০২৬', summary: 'সকল গ্রামবাসীর উপস্থিতিতে নতুন ওজুরখানা ও গম্বুজ মেরামতের বৈঠক...', details: 'আগামী শনিবার এশার নামাজের পর মসজিদ প্রাঙ্গণে এক মতবিনিময় সভা অনুষ্ঠিত হবে। প্রবাসী ভাইদের অনুদান ও গ্রামের তহবিল সংক্রান্ত আপডেট দেয়া হবে।' }
-        ];
-
-        const initialContacts = [
-            { id: 1, title: 'উপজেলা স্বাস্থ্য কমপ্লেক্স (জরুরি বিভাগ)', category: 'ডাক্তার ও চিকিৎসা', icon: 'fa-user-doctor', phone: '০১৭০০০১-১২২২৩৩', person: 'ডা: মোঃ রফিকুল ইসলাম' },
-            { id: 2, title: 'জরুরি অ্যাম্বুলেন্স সেবা', category: 'পরিবহন', icon: 'fa-truck-medical', phone: '০১৯১১-২২ ৩৩৪৪', person: 'চালক: মোঃ কালাম' },
-            { id: 3, title: 'গ্রাম পুলিশ ও নৈশ প্রহরী', category: 'নিরাপত্তা', icon: 'fa-shield-halved', phone: '০১৮১২-৩৪৫৬৭৮', person: 'মোঃ রহমত মিঞা' },
-            { id: 4, title: 'পল্লী বিদ্যুৎ অভিযোগ কেন্দ্র', category: 'বিদ্যুৎ', icon: 'fa-bolt text-amber-500', phone: '০১৬৭৮-৯৯০০১১', person: 'উপকেন্দ্র বাঁশখালী' },
-            { id: 5, title: 'ব্লক কৃষি কর্মকর্তা', category: 'কৃষি পরামর্শ', icon: 'fa-wheat-awn text-emerald-600', phone: '০১৫৫৫-৬৭৮৮', person: 'কৃষিবিদ আব্দুল হাদি' },
-            { id: 6, title: 'ইউপি চেয়ারম্যান কার্যালয়', category: 'প্রশাসন', icon: 'fa-landmark text-blue-600', phone: '০১৭১১-৯৯৮৮৭৭', person: 'চেয়ারম্যান মহোদয়' }
-        ];
-
-        const initialMarket = [
-            { id: 1, name: 'আমন ধান (নতুন)', unit: 'মন (৪০ কেজি)', wholesale: '১,২০০ - ১,২৫০ টাকা', retail: '১,৩০০ টাকা', status: 'up', change: '+৫০ টাকা' },
-            { id: 2, name: 'আলু (ডায়মন্ড)', unit: 'কেজি', wholesale: '৩৬ টাকা', retail: '৪২ টাকা', status: 'same', change: 'অপরিবর্তিত' },
-            { id: 3, name: 'খাটি গরুর দুধ', unit: 'লিটার', wholesale: '৭০ টাকা', retail: '৮০ টাকা', status: 'same', change: 'অপরিবর্তিত' },
-            { id: 4, name: 'সরিষা', unit: 'মন (৪০ কেজি)', wholesale: '৩,২০০ টাকা', retail: '৩,৪০০ টাকা', status: 'down', change: '-১০০ টাকা' },
-            { id: 5, name: 'দেশি ডিম', unit: 'হালি (৪টি)', wholesale: '৫০ টাকা', retail: '৫৫ টাকা', status: 'up', change: '+২ টাকা' },
-            { id: 6, name: 'কাঁচামরিচ', unit: 'কেজি', wholesale: '১১০ টাকা', retail: '১৩০ টাকা', status: 'down', change: '-২০ টাকা' }
-        ];
-
-        // Global Cache Arrays
+        // Global Cache Arrays (Loaded from Firebase)
         let firebaseUsers = [];
         let firebaseMessages = [];
+        let firebaseNotices = [];
+        let firebaseContacts = [];
+        let firebaseMarket = [];
 
         // Current Logged User Helper
         function getCurrentUser() { return JSON.parse(localStorage.getItem('current_logged_user') || 'null'); }
         function setCurrentUser(user) { localStorage.setItem('current_logged_user', JSON.stringify(user)); }
-
-        function getStoredData(key, fallback) {
-            const data = localStorage.getItem(key);
-            if (!data) {
-                localStorage.setItem(key, JSON.stringify(fallback));
-                return fallback;
-            }
-            return JSON.parse(data);
-        }
-
-        function setStoredData(key, data) {
-            localStorage.setItem(key, JSON.stringify(data));
-        }
 
         // Authorization Checker
         function isUserAuthorized() {
@@ -702,7 +665,7 @@
                 });
                 renderAdminUsers();
                 renderAuthBar();
-            }, (err) => { console.error("Firebase Read Error:", err); });
+            }, (err) => { console.error("Firebase Read Error (Users):", err); });
 
             // 2. Listen Messages Collection
             onSnapshot(collection(window.db, "messages"), (snapshot) => {
@@ -712,7 +675,34 @@
                 });
                 renderAdminMessages();
                 renderAuthBar();
-            }, (err) => { console.error("Firebase Read Error:", err); });
+            }, (err) => { console.error("Firebase Read Error (Messages):", err); });
+
+            // 3. Listen Notices Collection
+            onSnapshot(collection(window.db, "notices"), (snapshot) => {
+                firebaseNotices = [];
+                snapshot.forEach(docSnap => {
+                    firebaseNotices.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                renderNotices(currentFilter, document.getElementById('notice-search').value);
+            }, (err) => { console.error("Firebase Read Error (Notices):", err); });
+
+            // 4. Listen Contacts Collection
+            onSnapshot(collection(window.db, "contacts"), (snapshot) => {
+                firebaseContacts = [];
+                snapshot.forEach(docSnap => {
+                    firebaseContacts.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                renderContacts(document.getElementById('contact-search').value);
+            }, (err) => { console.error("Firebase Read Error (Contacts):", err); });
+
+            // 5. Listen Market Collection
+            onSnapshot(collection(window.db, "market"), (snapshot) => {
+                firebaseMarket = [];
+                snapshot.forEach(docSnap => {
+                    firebaseMarket.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                renderMarketTable();
+            }, (err) => { console.error("Firebase Read Error (Market):", err); });
         }
 
         // Render Auth Bar & Dynamic Badges
@@ -764,10 +754,6 @@
             document.getElementById('add-notice-btn-container').innerHTML = isAuth ? `<button onclick="openNoticeForm()" class="bg-emerald-700 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-emerald-800 transition"><i class="fa-solid fa-plus mr-1"></i> নতুন নোটিশ</button>` : '';
             document.getElementById('add-contact-btn-container').innerHTML = isAuth ? `<button onclick="openContactForm()" class="bg-emerald-700 text-white px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-800 transition"><i class="fa-solid fa-plus mr-1"></i> নতুন সেবা</button>` : '';
             document.getElementById('add-market-btn-container').innerHTML = isAuth ? `<button onclick="openMarketForm()" class="bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-emerald-800 transition"><i class="fa-solid fa-plus mr-1"></i> নতুন পণ্য</button>` : '';
-
-            renderNotices(currentFilter, document.getElementById('notice-search').value);
-            renderContacts(document.getElementById('contact-search').value);
-            renderMarketTable();
         }
 
         // Auth Operations (Firebase Firestore Integrated)
@@ -789,7 +775,6 @@
             btn.innerText = "জমা দেওয়া হচ্ছে...";
 
             try {
-                // Check duplicate email
                 const exist = firebaseUsers.find(u => u.email === email);
                 if (exist) {
                     msg.className = "mt-3 text-xs text-center font-medium text-red-600";
@@ -813,7 +798,7 @@
                 e.target.reset();
             } catch (err) {
                 msg.className = "mt-3 text-xs text-center font-medium text-red-600";
-                msg.innerText = "ত্রুটি: " + (err.message.includes('permission-denied') ? "ফায়ারবেস ডাটাবেস রুলস ব্লক করা রয়েছে (Security Rules problem)" : err.message);
+                msg.innerText = "ত্রুটি: " + err.message;
             } finally {
                 btn.disabled = false;
                 btn.innerText = "রেজিস্ট্রেশন জমা দিন";
@@ -826,7 +811,6 @@
             const password = document.getElementById('login-password').value;
             const msg = document.getElementById('login-msg');
 
-            // Hardcoded Admin Check
             if (email === ADMIN_EMAIL && password === ADMIN_PASS) {
                 const adminObj = { name: 'এডমিন (Dipranjan)', email: ADMIN_EMAIL, status: 'approved', role: 'admin' };
                 setCurrentUser(adminObj);
@@ -840,7 +824,6 @@
                 return;
             }
 
-            // Normal User Firebase Check
             const user = firebaseUsers.find(u => u.email === email && u.password === password);
             if (!user) {
                 msg.className = "mt-3 text-xs text-center font-medium text-red-600";
@@ -873,7 +856,7 @@
             renderAuthBar();
         }
 
-        // Admin Panel Functions (Firebase Operations)
+        // Admin Panel Functions
         function switchAdminTab(tab) {
             const usersTabBtn = document.getElementById('admin-tab-users');
             const messagesTabBtn = document.getElementById('admin-tab-messages');
@@ -1023,7 +1006,7 @@
             }
         }
 
-        // Contact Form Submit Handler (Saves to Firestore)
+        // Contact Form Submit Handler
         async function handleFormSubmit(e) {
             e.preventDefault();
             const btn = document.getElementById('msg-submit-btn');
@@ -1031,7 +1014,7 @@
 
             if (!window.db) {
                 alertBox.className = "mt-4 p-4 rounded-xl text-sm font-medium bg-red-100 text-red-800 border border-red-200 animate-fade-in";
-                alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> ডাটাবেস কানেকশন ব্যর্থ হয়েছে। দয়া করে পেজ রিফ্রেশ দিন।`;
+                alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> ডাটাবেস কানেকশন ব্যর্থ হয়েছে।`;
                 alertBox.classList.remove('hidden');
                 return;
             }
@@ -1053,14 +1036,14 @@
                 await window.addDoc(window.collection(window.db, "messages"), newMessage);
 
                 alertBox.className = "mt-4 p-4 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-800 border border-emerald-200 animate-fade-in";
-                alertBox.innerHTML = `<i class="fa-solid fa-check-circle mr-1" aria-hidden="true"></i> ধন্যবাদ! আপনার বার্তাটি ক্লাউড ডাটাবেসে সফলভাবে জমা হয়েছে।`;
+                alertBox.innerHTML = `<i class="fa-solid fa-check-circle mr-1" aria-hidden="true"></i> ধন্যবাদ! আপনার বার্তাটি ক্লাউড ডাটাবেসে জমা হয়েছে।`;
                 alertBox.classList.remove('hidden');
                 e.target.reset();
 
                 setTimeout(() => { alertBox.classList.add('hidden'); }, 5000);
             } catch (err) {
                 alertBox.className = "mt-4 p-4 rounded-xl text-sm font-medium bg-red-100 text-red-800 border border-red-200 animate-fade-in";
-                alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> বার্তা পাঠাতে ত্রুটি হয়েছে: ` + (err.message.includes('permission-denied') ? "ফায়ারবেস ডাটাবেস রুলস ব্লক করা রয়েছে।" : err.message);
+                alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> ত্রুটি: ` + err.message;
                 alertBox.classList.remove('hidden');
             } finally {
                 btn.disabled = false;
@@ -1110,18 +1093,17 @@
             }
         }
 
-        // Dynamic Notice Operations
+        // --- Dynamic Firebase Notice Operations ---
         let currentFilter = 'all';
 
         function renderNotices(filter = 'all', searchQuery = '') {
             const container = document.getElementById('notice-container');
             container.innerHTML = '';
-            const notices = getStoredData('village_notices', initialNotices);
             const isAuth = isUserAuthorized();
 
-            const filtered = notices.filter(item => {
+            const filtered = firebaseNotices.filter(item => {
                 const matchesFilter = filter === 'all' || item.category === filter;
-                const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) || item.summary.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchesSearch = (item.title || '').toLowerCase().includes(searchQuery.toLowerCase()) || (item.summary || '').toLowerCase().includes(searchQuery.toLowerCase());
                 return matchesFilter && matchesSearch;
             });
 
@@ -1140,15 +1122,15 @@
                 
                 let editBtns = isAuth ? `
                     <div class="flex gap-2">
-                        <button onclick="openNoticeForm(${notice.id})" class="text-xs text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button onclick="deleteNotice(${notice.id})" class="text-xs text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="openNoticeForm('${notice.id}')" class="text-xs text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteNotice('${notice.id}')" class="text-xs text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 ` : '';
 
                 card.innerHTML = `
                     <div>
                         <div class="flex items-center justify-between text-xs text-slate-500 mb-3">
-                            <span class="bg-brand-50 text-brand-700 px-2.5 py-1 rounded-md font-medium border border-brand-100">${notice.categoryBn}</span>
+                            <span class="bg-brand-50 text-brand-700 px-2.5 py-1 rounded-md font-medium border border-brand-100">${notice.categoryBn || 'সাধারণ'}</span>
                             <div class="flex items-center gap-2">
                                 <span><i class="fa-regular fa-calendar mr-1" aria-hidden="true"></i>${notice.date}</span>
                                 ${editBtns}
@@ -1157,7 +1139,7 @@
                         <h3 class="font-bold text-lg text-slate-800 mb-2 leading-snug">${notice.title}</h3>
                         <p class="text-slate-600 text-sm mb-4 leading-relaxed">${notice.summary}</p>
                     </div>
-                    <button onclick="openNoticeModal(${notice.id})" class="text-brand-700 hover:text-brand-800 font-semibold text-sm flex items-center gap-1.5 pt-2 border-t border-slate-100">
+                    <button onclick="openNoticeModal('${notice.id}')" class="text-brand-700 hover:text-brand-800 font-semibold text-sm flex items-center gap-1.5 pt-2 border-t border-slate-100">
                         বিস্তারিত পড়ুন <i class="fa-solid fa-arrow-right-long text-xs" aria-hidden="true"></i>
                     </button>
                 `;
@@ -1170,8 +1152,7 @@
             document.getElementById('notice-id').value = id || '';
             if (id) {
                 modalTitle.innerText = "নোটিশ সম্পাদনা করুন";
-                const notices = getStoredData('village_notices', initialNotices);
-                const item = notices.find(n => n.id === id);
+                const item = firebaseNotices.find(n => n.id === id);
                 if (item) {
                     document.getElementById('form-notice-title').value = item.title;
                     document.getElementById('form-notice-category').value = item.category;
@@ -1189,54 +1170,62 @@
             openModal('notice-form-modal');
         }
 
-        function saveNotice(e) {
+        async function saveNotice(e) {
             e.preventDefault();
-            let notices = getStoredData('village_notices', initialNotices);
+            const btn = document.getElementById('notice-save-btn');
             const id = document.getElementById('notice-id').value;
             const categoryMap = { agriculture: 'কৃষি', health: 'স্বাস্থ্য', education: 'শিক্ষা', general: 'সাধারণ' };
             const category = document.getElementById('form-notice-category').value;
 
             const newItem = {
-                id: id ? parseInt(id) : Date.now(),
                 title: document.getElementById('form-notice-title').value,
                 category: category,
                 categoryBn: categoryMap[category] || 'সাধারণ',
                 date: document.getElementById('form-notice-date').value,
                 summary: document.getElementById('form-notice-summary').value,
-                details: document.getElementById('form-notice-details').value
+                details: document.getElementById('form-notice-details').value,
+                updatedAt: new Date().toISOString()
             };
 
-            if (id) {
-                const index = notices.findIndex(n => n.id === parseInt(id));
-                if (index !== -1) notices[index] = newItem;
-            } else {
-                notices.unshift(newItem);
+            btn.disabled = true;
+            btn.innerText = "সংরক্ষণ করা হচ্ছে...";
+
+            try {
+                if (id) {
+                    await window.updateDoc(window.doc(window.db, "notices", id), newItem);
+                } else {
+                    newItem.createdAt = new Date().toISOString();
+                    await window.addDoc(window.collection(window.db, "notices"), newItem);
+                }
+                closeModal('notice-form-modal');
+            } catch (err) {
+                alert("ত্রুটি: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "সংরক্ষণ করুন";
             }
-            setStoredData('village_notices', notices);
-            closeModal('notice-form-modal');
-            renderNotices(currentFilter, document.getElementById('notice-search').value);
         }
 
-        function deleteNotice(id) {
+        async function deleteNotice(id) {
             if (confirm('আপনি কি নিশ্চিত যে এই নোটিশটি মুছে ফেলতে চান?')) {
-                let notices = getStoredData('village_notices', initialNotices);
-                notices = notices.filter(n => n.id !== id);
-                setStoredData('village_notices', notices);
-                renderNotices(currentFilter, document.getElementById('notice-search').value);
+                try {
+                    await window.deleteDoc(window.doc(window.db, "notices", id));
+                } catch (err) {
+                    alert("মুছতে সমস্যা হয়েছে: " + err.message);
+                }
             }
         }
 
-        // Dynamic Contacts Operations
+        // --- Dynamic Firebase Contacts Operations ---
         function renderContacts(query = '') {
             const container = document.getElementById('contacts-container');
             container.innerHTML = '';
-            const contacts = getStoredData('village_contacts', initialContacts);
             const isAuth = isUserAuthorized();
 
-            const filtered = contacts.filter(c => 
-                c.title.toLowerCase().includes(query.toLowerCase()) || 
-                c.person.toLowerCase().includes(query.toLowerCase()) || 
-                c.category.toLowerCase().includes(query.toLowerCase())
+            const filtered = firebaseContacts.filter(c => 
+                (c.title || '').toLowerCase().includes(query.toLowerCase()) || 
+                (c.person || '').toLowerCase().includes(query.toLowerCase()) || 
+                (c.category || '').toLowerCase().includes(query.toLowerCase())
             );
 
             if(filtered.length === 0) {
@@ -1250,15 +1239,15 @@
                 
                 let editBtns = isAuth ? `
                     <div class="absolute top-2 right-2 flex gap-1.5 bg-white/80 backdrop-blur px-2 py-1 rounded-md shadow-sm">
-                        <button onclick="openContactForm(${item.id})" class="text-xs text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button onclick="deleteContact(${item.id})" class="text-xs text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="openContactForm('${item.id}')" class="text-xs text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteContact('${item.id}')" class="text-xs text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 ` : '';
 
                 card.innerHTML = `
                     ${editBtns}
                     <div class="w-12 h-12 rounded-full bg-brand-50 text-brand-700 flex items-center justify-center text-xl shrink-0">
-                        <i class="fa-solid ${item.icon}" aria-hidden="true"></i>
+                        <i class="fa-solid ${item.icon || 'fa-phone'}" aria-hidden="true"></i>
                     </div>
                     <div class="flex-grow">
                         <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">${item.category}</span>
@@ -1281,8 +1270,7 @@
             const modalTitle = document.getElementById('contact-form-title');
             if(id) {
                 modalTitle.innerText = "সেবা সম্পাদনা করুন";
-                const contacts = getStoredData('village_contacts', initialContacts);
-                const item = contacts.find(c => c.id === id);
+                const item = firebaseContacts.find(c => c.id === id);
                 if(item) {
                     document.getElementById('form-contact-title').value = item.title;
                     document.getElementById('form-contact-category').value = item.category;
@@ -1300,51 +1288,64 @@
             openModal('contact-form-modal');
         }
 
-        function saveContact(e) {
+        async function saveContact(e) {
             e.preventDefault();
-            let contacts = getStoredData('village_contacts', initialContacts);
+            const btn = document.getElementById('contact-save-btn');
             const id = document.getElementById('contact-id').value;
 
             const newItem = {
-                id: id ? parseInt(id) : Date.now(),
                 title: document.getElementById('form-contact-title').value,
                 category: document.getElementById('form-contact-category').value,
                 icon: document.getElementById('form-contact-icon').value,
                 person: document.getElementById('form-contact-person').value,
-                phone: document.getElementById('form-contact-phone').value
+                phone: document.getElementById('form-contact-phone').value,
+                updatedAt: new Date().toISOString()
             };
 
-            if(id) {
-                const index = contacts.findIndex(c => c.id === parseInt(id));
-                if(index !== -1) contacts[index] = newItem;
-            } else {
-                contacts.unshift(newItem);
+            btn.disabled = true;
+            btn.innerText = "সংরক্ষণ করা হচ্ছে...";
+
+            try {
+                if(id) {
+                    await window.updateDoc(window.doc(window.db, "contacts", id), newItem);
+                } else {
+                    newItem.createdAt = new Date().toISOString();
+                    await window.addDoc(window.collection(window.db, "contacts"), newItem);
+                }
+                closeModal('contact-form-modal');
+            } catch (err) {
+                alert("ত্রুটি: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "সংরক্ষণ করুন";
             }
-            setStoredData('village_contacts', contacts);
-            closeModal('contact-form-modal');
-            renderContacts(document.getElementById('contact-search').value);
         }
 
-        function deleteContact(id) {
+        async function deleteContact(id) {
             if(confirm('আপনি কি নিশ্চিত যে এই যোগাযোগ বিবরণটি মুছে ফেলতে চান?')) {
-                let contacts = getStoredData('village_contacts', initialContacts);
-                contacts = contacts.filter(c => c.id !== id);
-                setStoredData('village_contacts', contacts);
-                renderContacts(document.getElementById('contact-search').value);
+                try {
+                    await window.deleteDoc(window.doc(window.db, "contacts", id));
+                } catch (err) {
+                    alert("মুছতে সমস্যা হয়েছে: " + err.message);
+                }
             }
         }
 
-        // Dynamic Market Operations
+        // --- Dynamic Firebase Market Operations ---
         function renderMarketTable() {
             const tbody = document.getElementById('market-table-body');
             tbody.innerHTML = '';
-            const market = getStoredData('village_market', initialMarket);
             const isAuth = isUserAuthorized();
 
             const adminCols = document.querySelectorAll('.admin-action-col');
             adminCols.forEach(col => isAuth ? col.classList.remove('hidden') : col.classList.add('hidden'));
 
-            market.forEach(item => {
+            if (firebaseMarket.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400">কোনো বাজার দর তালিকা পাওয়া যায়নি।</td></tr>`;
+                return;
+            }
+
+            firebaseMarket.forEach(item => {
                 const row = document.createElement('tr');
                 row.className = "hover:bg-slate-50 transition";
                 let badge = '';
@@ -1358,8 +1359,8 @@
 
                 let editBtns = isAuth ? `
                     <td class="p-4 text-right space-x-1">
-                        <button onclick="openMarketForm(${item.id})" class="text-xs text-blue-600 hover:text-blue-800 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button onclick="deleteMarketItem(${item.id})" class="text-xs text-red-600 hover:text-red-800 p-1"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="openMarketForm('${item.id}')" class="text-xs text-blue-600 hover:text-blue-800 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteMarketItem('${item.id}')" class="text-xs text-red-600 hover:text-red-800 p-1"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 ` : '';
 
@@ -1380,8 +1381,7 @@
             const modalTitle = document.getElementById('market-form-title');
             if(id) {
                 modalTitle.innerText = "পণ্য দরদাম সম্পাদনা";
-                const market = getStoredData('village_market', initialMarket);
-                const item = market.find(m => m.id === id);
+                const item = firebaseMarket.find(m => m.id === id);
                 if(item) {
                     document.getElementById('form-market-name').value = item.name;
                     document.getElementById('form-market-unit').value = item.unit;
@@ -1401,49 +1401,57 @@
             openModal('market-form-modal');
         }
 
-        function saveMarketItem(e) {
+        async function saveMarketItem(e) {
             e.preventDefault();
-            let market = getStoredData('village_market', initialMarket);
+            const btn = document.getElementById('market-save-btn');
             const id = document.getElementById('market-id').value;
 
             const newItem = {
-                id: id ? parseInt(id) : Date.now(),
                 name: document.getElementById('form-market-name').value,
                 unit: document.getElementById('form-market-unit').value,
                 wholesale: document.getElementById('form-market-wholesale').value,
                 retail: document.getElementById('form-market-retail').value,
                 status: document.getElementById('form-market-status').value,
-                change: document.getElementById('form-market-change').value
+                change: document.getElementById('form-market-change').value,
+                updatedAt: new Date().toISOString()
             };
 
-            if(id) {
-                const index = market.findIndex(m => m.id === parseInt(id));
-                if(index !== -1) market[index] = newItem;
-            } else {
-                market.unshift(newItem);
+            btn.disabled = true;
+            btn.innerText = "সংরক্ষণ করা হচ্ছে...";
+
+            try {
+                if(id) {
+                    await window.updateDoc(window.doc(window.db, "market", id), newItem);
+                } else {
+                    newItem.createdAt = new Date().toISOString();
+                    await window.addDoc(window.collection(window.db, "market"), newItem);
+                }
+                closeModal('market-form-modal');
+            } catch (err) {
+                alert("ত্রুটি: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "সংরক্ষণ করুন";
             }
-            setStoredData('village_market', market);
-            closeModal('market-form-modal');
-            renderMarketTable();
         }
 
-        function deleteMarketItem(id) {
+        async function deleteMarketItem(id) {
             if(confirm('আপনি কি নিশ্চিত যে এই পণ্যটি তালিকা থেকে মুছে ফেলতে চান?')) {
-                let market = getStoredData('village_market', initialMarket);
-                market = market.filter(m => m.id !== id);
-                setStoredData('village_market', market);
-                renderMarketTable();
+                try {
+                    await window.deleteDoc(window.doc(window.db, "market", id));
+                } catch (err) {
+                    alert("মুছতে সমস্যা হয়েছে: " + err.message);
+                }
             }
         }
 
         // Notice Detail Modal Logic
         function openNoticeModal(id) {
-            const notices = getStoredData('village_notices', initialNotices);
-            const notice = notices.find(n => n.id === id);
+            const notice = firebaseNotices.find(n => n.id === id);
             if(!notice) return;
             const modalContent = document.getElementById('modal-content');
             modalContent.innerHTML = `
-                <span class="inline-block bg-brand-100 text-brand-800 text-xs font-semibold px-2.5 py-1 rounded-md mb-2">${notice.categoryBn}</span>
+                <span class="inline-block bg-brand-100 text-brand-800 text-xs font-semibold px-2.5 py-1 rounded-md mb-2">${notice.categoryBn || 'সাধারণ'}</span>
                 <h3 class="text-xl font-bold text-slate-900 mb-2">${notice.title}</h3>
                 <p class="text-xs text-slate-400 mb-4"><i class="fa-regular fa-calendar mr-1" aria-hidden="true"></i>প্রকাশের তারিখ: ${notice.date}</p>
                 <div class="text-slate-700 text-sm leading-relaxed border-t border-slate-100 pt-3">
