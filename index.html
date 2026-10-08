@@ -83,6 +83,7 @@
                 <div class="hidden md:flex items-center space-x-1 space-x-reverse font-medium">
                     <a href="#hero" class="px-3 py-2 rounded-md text-brand-900 hover:text-brand-700 hover:bg-brand-50 transition">প্রচ্ছদ</a>
                     <a href="#notices" class="px-3 py-2 rounded-md text-slate-700 hover:text-brand-700 hover:bg-brand-50 transition">নোটিশ বোর্ড</a>
+                    <a href="#guide" class="px-3 py-2 rounded-md text-slate-700 hover:text-brand-700 hover:bg-brand-50 transition">ব্যবহার নির্দেশিকা</a>
                     <a href="#services" class="px-3 py-2 rounded-md text-slate-700 hover:text-brand-700 hover:bg-brand-50 transition">জরুরি সেবা</a>
                     <a href="#market" class="px-3 py-2 rounded-md text-slate-700 hover:text-brand-700 hover:bg-brand-50 transition">কৃষি বাজার</a>
                     <a href="#gallery" class="px-3 py-2 rounded-md text-slate-700 hover:text-brand-700 hover:bg-brand-50 transition">ঐতিহ্য</a>
@@ -102,6 +103,7 @@
         <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-2">
             <a href="#hero" class="mobile-link block px-3 py-2 rounded-md text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium">প্রচ্ছদ</a>
             <a href="#notices" class="mobile-link block px-3 py-2 rounded-md text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium">নোটিশ বোর্ড</a>
+            <a href="#guide" class="mobile-link block px-3 py-2 rounded-md text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium">ব্যবহার নির্দেশিকা</a>
             <a href="#services" class="mobile-link block px-3 py-2 rounded-md text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium">জরুরি সেবা</a>
             <a href="#market" class="mobile-link block px-3 py-2 rounded-md text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium">কৃষি বাজার</a>
             <a href="#gallery" class="mobile-link block px-3 py-2 rounded-md text-slate-700 hover:bg-brand-50 hover:text-brand-700 font-medium">ঐতিহ্য</a>
@@ -174,6 +176,7 @@
             <!-- Categories Tabs -->
             <div class="flex border-b border-slate-200 mb-6 overflow-x-auto gap-2 pb-2" id="notice-tabs">
                 <button data-category="all" class="notice-tab active-tab bg-brand-700 text-white px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition">সব নোটিশ</button>
+                <button data-category="urgent" class="notice-tab bg-red-100 text-red-700 hover:bg-red-200 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition">জরুরি নোটিশ</button>
                 <button data-category="agriculture" class="notice-tab bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition">কৃষি ও চাষাবাদ</button>
                 <button data-category="health" class="notice-tab bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition">স্বাস্থ্য ও টিকা</button>
                 <button data-category="education" class="notice-tab bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition">শিক্ষা ও স্কলারশিপ</button>
@@ -377,6 +380,7 @@
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">ক্যাটাগরি *</label>
                         <select id="form-notice-category" class="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:outline-none text-sm">
+                            <option value="urgent">জরুরি নোটিশ</option>
                             <option value="agriculture">কৃষি</option>
                             <option value="health">স্বাস্থ্য</option>
                             <option value="education">শিক্ষা</option>
@@ -1176,7 +1180,7 @@
             e.preventDefault();
             const btn = document.getElementById('notice-save-btn');
             const id = document.getElementById('notice-id').value;
-            const categoryMap = { agriculture: 'কৃষি', health: 'স্বাস্থ্য', education: 'শিক্ষা', general: 'সাধারণ' };
+            const categoryMap = { urgent: 'জরুরি', agriculture: 'কৃষি', health: 'স্বাস্থ্য', education: 'শিক্ষা', general: 'সাধারণ' };
             const category = document.getElementById('form-notice-category').value;
 
             const newItem = {
@@ -1593,4 +1597,4 @@
         }
     </script>
 </body>
-</html>
+    </html>
